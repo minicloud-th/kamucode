@@ -37,7 +37,7 @@ References reviewed: https://fastwork.com/ (redirected to /selling), https://www
 
 Browser checks confirm that the hero renders its headline immediately, the graphic-motion control changes the actual avatar animation to `paused`, the MP4 reaches readyState 4 with no media error and supports manual play/pause, and gallery filters show 6 total / 4 game / 2 source collections. A mobile product link opens `/login?next=%2Fproduct%2Fstorefront`, and the Signup link preserves that destination. Desktop hero and gallery were inspected; 390px and 320px iframe frames show no horizontal content or headline overflow. Temporary viewport QA files were removed before packaging. Reduced-motion handling is implemented in both CSS and the motion/video effects; no browser preference emulation was available. The header’s dark-surface style was corrected so its language selector remains readable over video and the dark statement section.
 
-## KC avatar hero and account update
+## Previous release: KC avatar hero and account update
 
 The new hero was informed by the live Yuusuke page’s full-screen paper-edge layout. Its embedded WebGL scene could not render in the QA browser (`Error creating WebGL context`), so no claim is made that the original live 3D scene or its animation was reproduced. kamucode uses its own generated 3D illustration with CSS motion and pointer/scroll parallax, requiring no WebGL.
 
@@ -46,3 +46,11 @@ The supplied suited-avatar image guided the pose and outfit. A new native SVG KC
 In browser QA, Login fits 1365×631 and 390×844 frames and Signup fits a 320×631 frame with footer at the viewport bottom and no horizontal overflow. The avatar sits outside normal form flow; it does not reduce field sizes or increase form height. Small-screen Home links retain an accessible label when their text is hidden. Temporary QA pages are removed before packaging. Asset provenance and the final prompt are recorded in `docs/HERO_ART.md`.
 
 The revised hero also fits 390px and 320px mobile frames without horizontal overflow; measured copy and avatar regions remain separate. The initial dark header is rechecked after layout changes so the retained top bar renders readable immediately.
+
+## White orbit hero and logo opening
+
+The supplied Superpower screenshot guides the white composition with tilted collection imagery around centered copy. The supplied logo collage guides an original SVG orbit-and-spark emblem. Six primary SVG logo variants and the light/dark-aware favicon use the new symbol; the original wordmark paths were compared byte-for-byte across four composite and two standalone variants. The earlier KC mascot monogram is retained separately for the Login/Signup avatar.
+
+The hero links eight existing products on desktop and displays six on mobile. A two-second opening rotates the emblem, spreads the images outward and reveals the headline. Browser checks confirm replay starts the actual logo/tile/copy animations, Skip restores full opacity, and pausing during the opening immediately reveals the copy while floating animations become paused. Resuming does not automatically restart the opening. Reduced-motion CSS and media-query handling show the final composition directly; browser preference emulation was unavailable.
+
+Responsive iframe checks at 1365×631, 390×844 and 320×631 show no horizontal overflow and keep the central copy separate from the collection images. The short desktop layout lowers the first row below the retained header. The header starts in its light style and still detects lower dark sections. The original film, gallery filters, partner banner, closing wordmark and native account navigation remain in place. Temporary viewport QA files are removed before packaging.

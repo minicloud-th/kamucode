@@ -52,7 +52,7 @@ export function Landing() {
     function scrollTo(id: string) {document.getElementById(id)?.scrollIntoView({behavior: still ? 'instant' : 'smooth'});}
 
     return <div className="studio-landing" ref={root} data-motion-paused={still}>
-        <ImmersiveHero authenticated={me.authenticated} paused={paused} reduced={reduced} onToggleMotion={() => setPaused(v => !v)} onExplore={() => scrollTo('collections')} onFilm={() => scrollTo('hero-film')}/>
+        <ImmersiveHero products={products} authenticated={me.authenticated} paused={paused} reduced={reduced} onToggleMotion={() => setPaused(v => !v)} onExplore={() => scrollTo('collections')} onFilm={() => scrollTo('hero-film')}/>
 
         <div className="studio-ticker" aria-hidden="true"><div className="studio-ticker-track">{[0, 1].map(n => <div key={n}>{['PLAY YOUR WAY', 'BUILD SOMETHING YOURS', 'GROW TOGETHER'].map(word => <span key={word}>{word}<img src="/assets/brand/mark.svg" width="30" height="30" alt=""/></span>)}</div>)}</div></div>
 

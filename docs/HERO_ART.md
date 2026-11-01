@@ -1,10 +1,10 @@
-# KC avatar and immersive hero
+# KC account mascot
 
 Asset: `public/media/hero-avatar-kc-v2.webp` (1024 × 1536, alpha preserved).
 
 Created with the built-in ImageGen tool using the supplied suited-avatar image as the body/pose reference and the new SVG KC symbol as the head reference. The PNG was converted to WebP at quality 90, with composition and alpha preserved.
 
-The new KC symbol is authored as SVG in `public/assets/brand/mark.svg` and its runtime logo variants. The existing kamucode wordmark paths, lettering and site font remain unchanged. This hero uses a rendered 3D avatar with CSS motion, pointer parallax and scroll transforms, with no WebGL requirement or claim of a live 3D model. The same avatar is displayed on Login and Signup without changing form height.
+The mascot's KC symbol is retained as native SVG in `public/assets/brand/kc-monogram.svg`. The primary site emblem is now the separate orbit-and-spark symbol in `mark.svg` and its runtime variants. The existing kamucode wordmark paths, lettering and site font remain unchanged. The rendered 3D mascot stays on Login and Signup without changing form height. The current landing uses floating collection images instead of this avatar; no live 3D model or WebGL is required.
 
 ## Final generation prompt
 

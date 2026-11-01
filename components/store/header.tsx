@@ -8,7 +8,7 @@ const LiquidNavbar = lazy(() => import('@/components/ui/liquid-glass-navbar'));
 const shortcuts = [{ label: 'ร้านค้า', href: '/shop', icon: <ShoppingBag size={18}/>, fx: 'pop' as const }, { label: 'เกม', href: '/games', icon: <Gamepad2 size={19}/>, fx: 'spin' as const }, { label: 'ซอร์สโค้ด', href: '/source-code', icon: <Code2 size={19}/>, fx: 'glow' as const }, { label: 'บันทึก', href: '/saved', icon: <Heart size={18}/>, fx: 'drop' as const }, { label: 'พาร์ทเนอร์', href: '/partners', icon: <Users size={18}/>, fx: 'wave' as const }];
 export function SiteHeader() {
     const { me } = useStore(), path = usePathname(), landing = path === '/' || path === '/welcome', memberNav = me.authenticated && !landing;
-    const [scrolled, setScrolled] = useState(false), [dark, setDark] = useState(landing), [open, setOpen] = useState(false), [languageOpen, setLanguageOpen] = useState(false), [loggingOut, setLoggingOut] = useState(false), [logoutError, setLogoutError] = useState('');
+    const [scrolled, setScrolled] = useState(false), [dark, setDark] = useState(false), [open, setOpen] = useState(false), [languageOpen, setLanguageOpen] = useState(false), [loggingOut, setLoggingOut] = useState(false), [logoutError, setLogoutError] = useState('');
     const profile = useRef<HTMLDivElement>(null), trigger = useRef<HTMLButtonElement>(null), locale = useRef<HTMLDivElement>(null), languageTrigger = useRef<HTMLButtonElement>(null);
     useEffect(() => {
         let frame = 0;
@@ -16,8 +16,7 @@ export function SiteHeader() {
             frame = 0;
             setScrolled(window.scrollY > (landing ? innerHeight * .35 : 14));
             const surfaces = [...document.querySelectorAll('[data-classic-dark]')].map(n => n.getBoundingClientRect());
-            const pendingLayout = !surfaces.some(r => r.height > 0);
-            setDark(landing && (surfaces.some(r => r.top < 70 && r.bottom > 70) || (pendingLayout && window.scrollY < innerHeight)));
+            setDark(landing && surfaces.some(r => r.top < 70 && r.bottom > 70));
         };
         const queue = () => {if (!frame) frame = requestAnimationFrame(update);};
         const observer = landing ? new ResizeObserver(queue) : null;
@@ -27,7 +26,7 @@ export function SiteHeader() {
         addEventListener('resize', queue, {passive: true});
         return () => {observer?.disconnect(); cancelAnimationFrame(frame); removeEventListener('scroll', queue); removeEventListener('resize', queue);};
     }, [landing]);
-    useEffect(() => { setOpen(false); setLanguageOpen(false); }, [path]);
+    useEffect(() => { const frame = requestAnimationFrame(() => { setOpen(false); setLanguageOpen(false); }); return () => cancelAnimationFrame(frame); }, [path]);
     useEffect(() => { if (!open && !languageOpen)
         return; const outside = (e: PointerEvent) => { if (!profile.current?.contains(e.target as Node))
         setOpen(false); if (!locale.current?.contains(e.target as Node))
