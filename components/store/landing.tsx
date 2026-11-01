@@ -2,8 +2,9 @@
 
 import {useEffect, useRef, useState, type CSSProperties} from 'react';
 import Link from '@/components/store/navigation-link';
-import {ArrowDown, ArrowRight, ArrowUpRight, ChevronRight, Code2, Gamepad2, Pause, Play, Plus} from 'lucide-react';
+import {ArrowUpRight, ChevronRight, Code2, Gamepad2, Plus} from 'lucide-react';
 import {HeroVideo, BrandReveal} from './media';
+import {ImmersiveHero} from './immersive-hero';
 import {useStore} from './provider';
 import type {Product} from '@/lib/commerce/types';
 
@@ -13,23 +14,14 @@ const imageFor = (p: Product) => p.kind === 'game' && ['valorant', 'roblox', 'mi
     ? '/assets/landing/' + p.id + '.webp'
     : p.image.startsWith('/assets/catalog/') && p.kind === 'source' ? '/assets/code/' + p.id + '.svg' : p.image;
 
-function FloatingCard({product, index}: {product: Product; index: number}) {
-    return <Link href={'/product/' + product.id} className={'studio-float-card float-' + index} aria-label={'ดู ' + product.name}>
-        <div className="studio-float-image"><img src={imageFor(product)} width="600" height="450" alt="" fetchPriority={index === 0 ? 'high' : 'auto'} draggable={false}/></div>
-        <div className="studio-float-caption"><span><small>{product.kind === 'game' ? 'PLAY / GAME ID' : 'BUILD / SOURCE CODE'}</small><strong>{product.name}</strong></span><ArrowUpRight size={17}/></div>
-    </Link>;
-}
-
 export function Landing() {
     const {products, me} = useStore();
     const root = useRef<HTMLDivElement>(null);
-    const stage = useRef<HTMLDivElement>(null);
     const [filter, setFilter] = useState<Filter>('all');
     const [paused, setPaused] = useState(false);
     const [reduced, setReduced] = useState(false);
     const featured = selection.map(id => products.find(p => p.id === id)).filter((p): p is Product => !!p);
     const displayed = featured.filter(p => filter === 'all' || p.kind === filter);
-    const heroCards = ['valorant', 'dashboard', 'genshin'].map(id => products.find(p => p.id === id)).filter((p): p is Product => !!p);
     const still = paused || reduced;
 
     useEffect(() => {
@@ -57,30 +49,10 @@ export function Landing() {
         return () => {observer.disconnect(); for (const node of nodes) node.classList.remove('will-reveal');};
     }, [still, filter]);
 
-    useEffect(() => {
-        const element = stage.current;
-        if (!element || still || !matchMedia('(pointer: fine)').matches) return;
-        let frame = 0, x = 0, y = 0;
-        const render = () => {frame = 0; element.style.setProperty('--pointer-x', x + 'px'); element.style.setProperty('--pointer-y', y + 'px');};
-        const queue = () => {if (!frame) frame = requestAnimationFrame(render);};
-        const move = (event: PointerEvent) => {const rect = element.getBoundingClientRect(); x = ((event.clientX - rect.left) / rect.width - .5) * 16; y = ((event.clientY - rect.top) / rect.height - .5) * 16; queue();};
-        const reset = () => {x = 0; y = 0; queue();};
-        element.addEventListener('pointermove', move, {passive: true});
-        element.addEventListener('pointerleave', reset, {passive: true});
-        return () => {cancelAnimationFrame(frame); element.removeEventListener('pointermove', move); element.removeEventListener('pointerleave', reset); element.style.removeProperty('--pointer-x'); element.style.removeProperty('--pointer-y');};
-    }, [still]);
-
     function scrollTo(id: string) {document.getElementById(id)?.scrollIntoView({behavior: still ? 'instant' : 'smooth'});}
 
     return <div className="studio-landing" ref={root} data-motion-paused={still}>
-        <section className="studio-hero" aria-labelledby="studio-heading">
-            <div className="studio-hero-meta"><span><i/>A SPACE FOR YOUR NEXT CHAPTER</span><button type="button" onClick={() => setPaused(v => !v)} aria-pressed={paused} disabled={reduced} aria-label={reduced ? 'ปิดอนิเมชั่นตามการตั้งค่าอุปกรณ์' : paused ? 'เล่นอนิเมชั่น' : 'หยุดอนิเมชั่น'}>{still ? <Play size={12}/> : <Pause size={12}/>}<span>{reduced ? 'REDUCED MOTION' : paused ? 'MOTION OFF' : 'MOTION ON'}</span></button></div>
-            <div className="studio-hero-grid">
-                <div className="studio-hero-copy"><span className="studio-kicker">PLAY. BUILD. GROW.</span><h1 id="studio-heading">เล่นให้สุด<span className="studio-title-last">สร้างให้ไกล<img src="/assets/brand/mark.svg" width="74" height="74" alt=""/></span></h1><p>เกมที่อยากเล่น โค้ดที่อยากสร้าง<br/>และพื้นที่ให้ไอเดียของคุณเติบโตไปด้วยกัน</p><div className="studio-hero-actions"><button className="studio-button" type="button" onClick={() => scrollTo('collections')}>ค้นพบสิ่งที่ชอบ <ArrowUpRight size={18}/></button><Link className="studio-inline-link" href={me.authenticated ? '/shop' : '/signup'}>{me.authenticated ? 'เข้าสู่ร้านค้า' : 'เริ่มต้นกับ kamucode'}<ArrowRight size={15}/></Link></div><div className="studio-hero-signature"><img src="/assets/brand/wordmark.svg" width="180" height="30" alt="kamucode"/><span>สำหรับคนชอบเล่น และคนชอบสร้าง</span></div></div>
-                <div className="studio-stage" ref={stage} aria-label="คอลเลกชันเกมและซอร์สโค้ดของ kamucode"><div className="studio-stage-wash" aria-hidden="true"/><div className="studio-stage-lines" aria-hidden="true"/><span className="studio-stage-word" aria-hidden="true">make<br/>your<br/><i>move.</i></span><div className="studio-stage-cards">{heroCards.map((product, index) => <FloatingCard key={product.id} product={product} index={index}/>)}</div><span className="studio-stage-sticker"><img src="/assets/brand/mark.svg" width="32" height="32" alt=""/>GOOD THINGS<br/>START HERE.</span><span className="studio-stage-caption">THE KAMUCODE SELECTION — 01</span></div>
-            </div>
-            <div className="studio-hero-bottom"><nav aria-label="สำรวจหน้าแรก"><a href="#collections">01 <span>เล่น & สร้าง</span><ArrowUpRight size={13}/></a><a href="#how-it-works">02 <span>เริ่มอย่างไร</span><ArrowUpRight size={13}/></a><a href="#partner">03 <span>เติบโตด้วยกัน</span><ArrowUpRight size={13}/></a></nav><button type="button" onClick={() => scrollTo('hero-film')} className="studio-scroll">SCROLL TO EXPLORE <ArrowDown size={14}/></button></div>
-        </section>
+        <ImmersiveHero authenticated={me.authenticated} paused={paused} reduced={reduced} onToggleMotion={() => setPaused(v => !v)} onExplore={() => scrollTo('collections')} onFilm={() => scrollTo('hero-film')}/>
 
         <div className="studio-ticker" aria-hidden="true"><div className="studio-ticker-track">{[0, 1].map(n => <div key={n}>{['PLAY YOUR WAY', 'BUILD SOMETHING YOURS', 'GROW TOGETHER'].map(word => <span key={word}>{word}<img src="/assets/brand/mark.svg" width="30" height="30" alt=""/></span>)}</div>)}</div></div>
 

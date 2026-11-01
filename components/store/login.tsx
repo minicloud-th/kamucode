@@ -88,9 +88,10 @@ export function Login({next = '/shop', signup = false}: {next?: string; signup?:
     }
 
     return <section className="auth-page" aria-labelledby={id + '-title'}>
+        {!details && <div className="auth-avatar" aria-hidden="true"><img src="/media/hero-avatar-kc-v2.webp" width="1024" height="1536" alt="" decoding="async"/></div>}
         <header className="auth-header">
             <Link href="/" aria-label="kamucode หน้าแรก" className="auth-brand"><img src="/assets/brand/logo.svg" width="169" height="27" alt="kamucode"/></Link>
-            <Link href="/" className="auth-home"><ArrowLeft size={14}/>กลับหน้าแรก</Link>
+            <Link href="/" className="auth-home" aria-label="กลับหน้าแรก"><ArrowLeft size={14}/><span>กลับหน้าแรก</span></Link>
         </header>
         <div className={'auth-content' + (details ? ' is-details' : '')}>
             <div className="auth-heading"><span className="auth-eyebrow">YOUR SPACE TO PLAY. BUILD. GROW.</span>

@@ -89,3 +89,22 @@
  .auth-content.is-details .auth-input input {height:54px}
  .auth-content.is-details .auth-switch {margin-top:20px}
 }
+
+/* The brand avatar sits outside the form and never changes its height. */
+.auth-page {position:relative;isolation:isolate}
+.auth-header,.auth-content,.auth-footer {position:relative;z-index:1}
+.auth-avatar {position:absolute;left:calc(50% - 410px);top:50%;width:270px;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.auth-avatar>img {display:block;width:100%;height:auto;filter:drop-shadow(0 20px 28px #1f3c6d13)}
+@media(min-width:1500px) {.auth-avatar {left:calc(50% - 440px);width:300px}}
+@media(max-width:1100px) and (min-width:601px) {.auth-avatar {left:calc(50% - 337px);width:170px}}
+@media(max-width:900px) and (min-width:601px) {.auth-avatar {left:calc(50% - 295px);width:115px}}
+@media(max-width:600px) {
+ .auth-avatar {left:55%;top:4px;width:80px;height:73px;transform:translateX(-50%);overflow:hidden;z-index:2}
+ .auth-avatar>img {width:80px;filter:none}
+}
+@media(max-width:370px) {
+ .auth-avatar {left:66%;top:5px;width:70px;height:68px}
+ .auth-avatar>img {width:70px}
+ .auth-home>span {display:none}
+ .auth-home {min-width:30px;min-height:30px;justify-content:center}
+}
