@@ -15,18 +15,18 @@ Member store pages retain five Liquid Glass shortcuts and search below the compa
 | Landing and discovery | `/`, `/welcome`, `/collections`, `/showcase` |
 | Catalog | `/shop`, `/games`, `/source-code`, `/product/[slug]`, `/saved` |
 | Purchase | `/cart`, `/checkout`, `/orders`, `/orders/[id]`, `/downloads` |
-| Account | `/login`, `/account`, `/account/security`, `/notifications` |
+| Account | `/login`, `/signup`, `/account`, `/account/security`, `/notifications` |
 | Partner | `/partners`, `/partners/apply`, `/partners/dashboard` |
 | Help | `/support`, `/support/tickets`, `/support/tickets/[id]`, `/faq`, `/contact`, `/how-it-works` |
 | Information | `/about`, `/privacy`, `/terms`, `/security`, `/sitemap` |
 | Recovery | `/forgot-password`, `/reset-password` |
 | Administration | `/admin`, `/admin/products`, `/admin/orders`, `/admin/support`, `/admin/partners`, `/admin/settings` |
 
-Authentication completion routes handle native/provider returns. Legacy `.html` URLs and `/signup` redirect to their current equivalents. Unknown URLs and inaccessible order/ticket records return an actual 404. User data and store/admin pages are protected at the server boundary, including API access.
+Authentication completion routes handle native/provider returns. Legacy `.html` URLs redirect to their current equivalents. Unknown URLs and inaccessible order/ticket records return an actual 404. User data and store/admin pages are protected at the server boundary, including API access.
 
 ## Working workflows
 
-- ChatGPT sign-in and existing email-account login automatically complete the member record. Email signup is disabled at the server. There is no Signup UI.
+- Email signup and login automatically complete the member record. The white, full-page authentication UI combines five compact provider tiles with an email-first flow, floating field labels, password visibility, and optional remembered login. Signup records an unverified email and cannot obtain admin rights by supplying an allowlisted address. Existing native ChatGPT sessions and callbacks remain supported.
 - Profile name and private avatar uploads, saved products, database-backed cart, notifications and personal JSON export.
 - Product management, encrypted digital inventory, server-priced one-item orders, atomic stock reservations, cancellation/stock release, manual payment review and private delivery after confirmation.
 - Member/guest support inbox, persisted admin responses, user ticket history, partner submissions, admin approval/rejection and member notifications.
@@ -63,7 +63,7 @@ npm run build
 npm test
 ```
 
-The integration suite exercises the built production Worker and a disposable D1 database. It checks public/member/admin SSR routes, real 404s, CSP nonces, same-origin writes, actual byte limits, cookie/identity isolation, disabled signup, existing email login/logout, concurrent last-item reservations, price tampering, encrypted delivery, paid/cancelled state transitions, ownership, support limits/replies, partner review and notifications. It never creates production test accounts or sends money/email.
+The integration suite exercises the built production Worker and a disposable D1 database. It checks public/member/admin SSR routes, real 404s, CSP nonces, same-origin writes, actual byte limits, cookie/identity isolation, email signup/login/logout, provider status, unverified admin-email isolation, concurrent last-item reservations, price tampering, encrypted delivery, paid/cancelled state transitions, ownership, support limits/replies, partner review and notifications. It never creates production test accounts or sends money/email.
 
 Local D1 migrations run separately from requests. After a build creates the Wrangler config, apply only pending SQL files in order:
 

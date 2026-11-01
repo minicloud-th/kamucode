@@ -9,8 +9,8 @@ The requested experience runs from a React screen through a same-origin Worker A
 | User separation | Tests try another user's order, ticket, saved list and avatar; private records are denied |
 | Stock and delivery | Two concurrent buyers request the last stock item; exactly one reserves it. The price comes from the server. Pending orders cannot read encrypted delivery; the paid owner can |
 | Administration | Non-admin API writes and admin-page access are rejected. Test owner creates products/stock/settings and reviews orders, support and partners |
-| Login | Email signup rejected; existing hashed-password account signs in and out; exact session cookies take precedence over native identity; external `next` URLs rejected |
-| Browser layout | Login card bottom 621px in a 1365×631 frame. Mobile login legal text bottom 735px in a 390×844 frame. No horizontal overflow on the tested mobile catalog |
+| Login | Email signup creates a hashed credential and an unverified user; new and existing accounts sign in and out; unverified signup cannot claim an allowlisted admin email; exact session cookies take precedence over native identity; external `next` URLs rejected |
+| Browser layout | Full-page email-first Login and Signup use their own minimal header/footer. The initial Login and password steps fit a 1365×631 viewport; Signup and its details step fit a 390×844 viewport, without horizontal overflow. No horizontal overflow on the tested mobile catalog |
 | Browser interaction | Profile disclosure opens with account/order/library/security/admin links; Escape closes it. Searching “dashboard” reduces the catalog from 8 cards to 1 |
 | Banner video | Browser played the original 8-second MP4 and the pause button returned it to the paused state. Poster image remains available before playback |
 | Error routing | Unknown route, nonexistent product and cross-user order/ticket render a real 404; old HTML URLs redirect |
@@ -19,8 +19,14 @@ Browser form submission of a guest support ticket was inconclusive because the b
 
 The public and authenticated headers were inspected separately. A temporary UI fixture supplied a synthetic member context for browser-only catalog/menu checks; that fixture and the responsive iframe wrapper are removed before packaging. No fixture credentials or local databases are included in the release.
 
-External OAuth applications are not configured, so real Google/Discord/LINE/GitHub/Microsoft/GitLab callback flows cannot be verified yet and their buttons remain disabled. There is no connected reset-email service or automatic payment processor. Real inventory, payment instructions and public contact information must come from the owner. These states are explained in the UI instead of being represented as completed integrations.
+External OAuth applications are not configured, so real Google/LINE/GitHub/Microsoft/Discord callback flows cannot be verified yet and their buttons remain disabled. There is no connected reset-email service or automatic payment processor. Real inventory, payment instructions and public contact information must come from the owner. These states are explained in the UI instead of being represented as completed integrations.
 
 ## Production navigation regression
 
 A real browser click on the Login link reproduced `TypeError: e is not a function` in Vinext's generated Link transition. Direct navigation to `/login` rendered correctly. Store links now use native document navigation through one shared TSX anchor component; the Liquid Glass shortcuts also retain their native anchor behavior. This avoids the failing transition without changing authentication, routes, or layout. Browser verification must click the published Top bar Login button, rather than checking the destination URL alone.
+
+## Email signup and minimal authentication UI
+
+The signup route now renders a real TSX form instead of redirecting to Login. Exactly Google, LINE, GitHub, Microsoft and Discord appear, with unavailable providers disabled. The email-first flow preserves the sanitized destination across Login/Signup links, uses a 10–128 character signup password, retains password whitespace and supports a session-only Login option. New email accounts remain unverified and cannot claim administrator access through an allowlisted email or client role fields.
+
+The built Worker and disposable D1 pass 131 counted assertions, including successful signup, hashed credential persistence, new/existing Login, duplicate rejection, logout and admin-email isolation. Browser QA confirms native Top bar and Signup navigation, password visibility, changing the selected email, and responsive dimensions. A temporary local initial-step override and iframe viewport fixture exposed both layout states without entering credentials; both were removed before the release build. No production accounts were created. OAuth callbacks and mail delivery still require real provider setup.

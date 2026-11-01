@@ -6,9 +6,9 @@ import { getDb } from '@/db';
 import { authUser,authSession,authAccount,authVerification,authRateLimit } from '@/db/schema';
 
 export const providerDefinitions=[
-  {id:'google',name:'Google',prefix:'GOOGLE'}, {id:'discord',name:'Discord',prefix:'DISCORD'},
-  {id:'line',name:'LINE',prefix:'LINE'}, {id:'github',name:'GitHub',prefix:'GITHUB'},
-  {id:'microsoft',name:'Microsoft',prefix:'MICROSOFT'}, {id:'gitlab',name:'GitLab',prefix:'GITLAB'},
+  {id:'google',name:'Google',prefix:'GOOGLE'}, {id:'line',name:'LINE',prefix:'LINE'},
+  {id:'github',name:'GitHub',prefix:'GITHUB'}, {id:'microsoft',name:'Microsoft',prefix:'MICROSOFT'},
+  {id:'discord',name:'Discord',prefix:'DISCORD'},
 ] as const;
 function value(key:string):string|undefined{return (env as unknown as Record<string,string|undefined>)[key];}
 export function providerStatus(){return providerDefinitions.map(p=>({id:p.id,name:p.name,enabled:!!(value(p.prefix+'_CLIENT_ID')&&value(p.prefix+'_CLIENT_SECRET'))}));}
@@ -22,7 +22,7 @@ export function getAuth(){
   return betterAuth({
     appName:'kamucode',secret,baseURL,trustedOrigins:[baseURL],basePath:'/api/auth',
     database:drizzleAdapter(getDb(),{provider:'sqlite',schema:{user:authUser,session:authSession,account:authAccount,verification:authVerification,rateLimit:authRateLimit},transaction:false}),
-    emailAndPassword:{enabled:true,disableSignUp:true,minPasswordLength:10,maxPasswordLength:128,autoSignIn:true},
+    emailAndPassword:{enabled:true,disableSignUp:false,minPasswordLength:10,maxPasswordLength:128,autoSignIn:true},
     socialProviders, account:{accountLinking:{enabled:false},encryptOAuthTokens:true},
     session:{expiresIn:60*60*24*7,updateAge:60*60*24},
     rateLimit:{enabled:true,storage:'database',window:60,max:100,customRules:{'/sign-in/email':{window:60,max:8},'/sign-up/email':{window:60,max:5}}},

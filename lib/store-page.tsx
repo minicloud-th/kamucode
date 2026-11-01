@@ -12,7 +12,7 @@ export type StorePageProps = {
     }>;
     searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
-export function metadataFor(path: string): Metadata { const cfg = Object.hasOwn(pages, path) ? pages[path] : undefined; return { title: cfg?.title || (path === 'login' ? 'เข้าสู่ระบบ' : path.startsWith('product/') ? 'รายละเอียดสินค้า' : 'kamucode'), robots: cfg?.public || path === 'welcome' ? undefined : { index: false, follow: false }, alternates: path === 'welcome' ? { canonical: 'https://kamucode.kawertyff-2.chatgpt.site/' } : undefined }; }
+export function metadataFor(path: string): Metadata { const cfg = Object.hasOwn(pages, path) ? pages[path] : undefined; return { title: cfg?.title || (path === 'signup' ? 'สมัครสมาชิก' : path === 'login' ? 'เข้าสู่ระบบ' : path.startsWith('product/') ? 'รายละเอียดสินค้า' : 'kamucode'), robots: cfg?.public || path === 'welcome' ? undefined : { index: false, follow: false }, alternates: path === 'welcome' ? { canonical: 'https://kamucode.kawertyff-2.chatgpt.site/' } : undefined }; }
 export async function generateMetadata({ params }: StorePageProps) { return metadataFor((await params).path.join('/')); }
 export async function renderStorePage({ params, searchParams }: StorePageProps) {
     const segments = (await params).path, path = segments.join('/'), query = await searchParams;
@@ -20,12 +20,10 @@ export async function renderStorePage({ params, searchParams }: StorePageProps) 
     const legacy = path.replace(/\/index\.html$/, '').replace(/\.html$/, '');
     if (path !== legacy)
         redirect('/' + legacy);
-    if (path === 'signup')
-        redirect('/login');
     if (path === 'welcome')
         return <Landing />;
-    if (path === 'login')
-        return <Login next={str('next') || '/shop'}/>;
+    if (path === 'login' || path === 'signup')
+        return <Login key={path} signup={path === 'signup'} next={str('next') || '/shop'}/>;
     if (path === 'auth/native' || path === 'auth/complete')
         return <AuthComplete native={path === 'auth/native'} next={str('next') || '/shop'}/>;
     if (segments[0] === 'product' && segments.length === 2) {

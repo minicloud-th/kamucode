@@ -7,7 +7,7 @@ import {safeNextPath} from '../lib/navigation.ts';
 import {hashPassword} from 'better-auth/crypto';
 const root=resolve('dist/server');
 const modules=(await readdir(root,{recursive:true})).filter(n=>/\.m?js$/.test(n)).sort((a,b)=>a==='index.js'?-1:b==='index.js'?1:a.localeCompare(b));
-const mf=new Miniflare({modules:modules.map(name=>({type:'ESModule',path:resolve(root,name)})),modulesRoot:root,compatibilityDate:'2026-05-15',compatibilityFlags:['nodejs_compat'],d1Databases:['DB'],bindings:{BETTER_AUTH_SECRET:'disposable-integration-secret-at-least-32-characters',BETTER_AUTH_URL:'https://integration.invalid',ADMIN_USER_IDS:'qa-owner'},cf:false});
+const mf=new Miniflare({modules:modules.map(name=>({type:'ESModule',path:resolve(root,name)})),modulesRoot:root,compatibilityDate:'2026-05-15',compatibilityFlags:['nodejs_compat'],d1Databases:['DB'],bindings:{BETTER_AUTH_SECRET:'disposable-integration-secret-at-least-32-characters',BETTER_AUTH_URL:'https://integration.invalid',ADMIN_USER_IDS:'qa-owner',ADMIN_EMAILS:'reserved-owner@example.com'},cf:false});
 let count=0;const eq=(a,b,msg)=>{count++;assert.equal(a,b,msg);};
 try{
  const db=await mf.getD1Database('DB');
@@ -21,15 +21,15 @@ try{
  const cookies=r=>r.headers.getSetCookie().map(c=>c.split(';')[0]).join('; ');
  const post=(path,b,who='alice')=>req('/api/store/'+path,b,who);
  eq((await req('/api/me')).status,401);
- const publicPages=['/','/welcome','/login','/support','/faq','/about','/contact','/how-it-works','/showcase','/privacy','/terms','/security','/sitemap','/forgot-password','/reset-password'];
+ const publicPages=['/','/welcome','/login','/signup','/support','/faq','/about','/contact','/how-it-works','/showcase','/privacy','/terms','/security','/sitemap','/forgot-password','/reset-password'];
  for(const p of publicPages){const r=await req(p);eq(r.status,200,p+' must render');assert.match(r.data,/<main/);assert.ok(!r.data.includes('fastwork-Bold'));}
  const landing=await req('/');assert.match(landing.data,/classic-hero/);assert.match(landing.data,/มีของดีในมือ/);assert.match(landing.data,/ความเป็นไปได้ใหม่/);assert.match(landing.data,/hero-film/);assert.match(landing.data,/เล่นให้สุด สร้างให้ไกล/);assert.match(landing.data,/assets\/landing\/valorant.webp/);assert.match(landing.headers.get('content-security-policy'),/frame-ancestors 'none'/);assert.match(landing.data,/<script[^>]+nonce="[^"]+"/);eq(landing.headers.get('x-frame-options'),'DENY');eq(landing.headers.get('cache-control'),'private, no-store');
  eq((await req('/missing-page')).status,404);eq((await req('/constructor')).status,404);eq((await req('/admin',undefined,'alice')).status,404);
  const privatePages=['/shop','/games','/source-code','/collections','/saved','/cart','/checkout','/orders','/downloads','/notifications','/partners','/partners/apply','/partners/dashboard','/account','/account/security','/support/tickets','/product/valorant'];
  for(const p of privatePages){const guest=await req(p);assert.ok([302,307].includes(guest.status),p+' is private');assert.match(guest.headers.get('location'),/login\?next=/);eq((await req(p,undefined,'alice')).status,200,p+' must render for members');}
  for(const p of ['/admin','/admin/products','/admin/orders','/admin/support','/admin/partners','/admin/settings'])eq((await req(p,undefined,'owner')).status,200,p);
- for(const p of ['/signup','/shop/index.html','/welcome.html'])assert.ok([302,307,308].includes((await req(p)).status));
- for(const target of ['https://evil.invalid','//evil.invalid','/\\evil.invalid','/api/auth/sign-out','/login'])eq(safeNextPath(target),'/shop');eq(safeNextPath('/orders/abc-123'),'/orders/abc-123');
+ for(const p of ['/shop/index.html','/welcome.html'])assert.ok([302,307,308].includes((await req(p)).status));
+ for(const target of ['https://evil.invalid','//evil.invalid','/\\evil.invalid','/api/auth/sign-out','/login','/signup'])eq(safeNextPath(target),'/shop');eq(safeNextPath('/orders/abc-123'),'/orders/abc-123');
  const me=(await req('/api/me',undefined,'alice')).data;eq(me.registered,true);eq(me.admin,false);eq((await req('/api/me',undefined,'owner')).data.admin,true);
  eq((await req('/api/me',undefined,'alice',{cookie:'something=kamucode; not_kc_signed_out=1'})).status,200,'Unrelated cookies cannot shadow a native session');
  eq((await req('/api/me',undefined,'alice',{cookie:'kc_signed_out=1'})).status,401);
@@ -68,9 +68,19 @@ try{
  await post('admin/inventory',{productId:prod.id,delivery:'SECOND DISPOSABLE DELIVERY'},'owner');const pending=await post('orders/create',{productId:prod.id},'alice');eq(pending.status,201);eq((await post('orders/cancel',{id:pending.data.id},'bob')).status,409);eq((await post('orders/cancel',{id:pending.data.id},'alice')).status,200);eq((await req('/api/store/catalog')).data.products.find(p=>p.id===prod.id).stock,1);
  assert.ok((await req('/api/store/notifications',undefined,buyer)).data.items.length>0);await post('notifications/read',{},buyer);eq((await req('/api/me',undefined,buyer)).data.unread,0);
  const pass='Disposable-password-for-tests-only!';const now=Date.now();await db.prepare('INSERT INTO auth_user (id,name,email,email_verified,created_at,updated_at) VALUES (?,?,?,1,?,?)').bind('email-qa','Email QA','email-qa@example.com',now,now).run();await db.prepare('INSERT INTO auth_account (id,account_id,provider_id,user_id,password,created_at,updated_at) VALUES (?,?,?,?,?,?,?)').bind('email-account','email-qa','credential','email-qa',await hashPassword(pass),now,now).run();
- const disabled=await req('/api/auth/sign-up/email',{email:'new@example.com',name:'No Signup',password:pass});assert.notEqual(disabled.status,200);eq(await db.prepare("SELECT id FROM auth_user WHERE email='new@example.com'").first(),null);
+ const authOptions=(await req('/api/auth-options')).data;eq(authOptions.email,true);eq(authOptions.signup,true);assert.deepEqual(authOptions.providers.map(p=>p.id),['google','line','github','microsoft','discord']);assert.ok(authOptions.providers.every(p=>!p.enabled));
+ const signupEmail='reserved-owner@example.com',signupPass=' '+pass+' ';
+ eq((await req('/api/auth/sign-up/email',{email:signupEmail,name:'QA Member',password:signupPass},undefined,{origin:'https://other.invalid'})).status,403);
+ assert.notEqual((await req('/api/auth/sign-up/email',{email:'weak@example.com',name:'Weak',password:'short'})).status,200);eq(await db.prepare("SELECT id FROM auth_user WHERE email='weak@example.com'").first(),null);
+ const signup=await req('/api/auth/sign-up/email',{email:signupEmail,name:'QA Member',password:signupPass,role:'admin',emailVerified:true});eq(signup.status,200,'Email signup is enabled');const signupCookie=cookies(signup);assert.match(signupCookie,/kamucode.session_token/);
+ const signedUp=(await req('/api/me',undefined,undefined,{cookie:signupCookie})).data;eq(signedUp.email,signupEmail);eq(signedUp.registered,true);eq(signedUp.emailVerified,false,'Client cannot assert email verification');eq(signedUp.admin,false,'Unverified signup cannot claim an allowlisted admin email');eq((await req('/admin',undefined,undefined,{cookie:signupCookie})).status,404);
+ const storedUser=await db.prepare('SELECT id,email_verified FROM auth_user WHERE email=?').bind(signupEmail).first();const storedCredential=await db.prepare("SELECT password FROM auth_account WHERE user_id=? AND provider_id='credential'").bind(storedUser.id).first();assert.ok(storedCredential.password&&!storedCredential.password.includes(pass),'Only the password hash is stored');
+ assert.notEqual((await req('/api/auth/sign-up/email',{email:signupEmail,name:'Duplicate',password:signupPass})).status,200);eq((await db.prepare('SELECT COUNT(*) n FROM auth_user WHERE email=?').bind(signupEmail).first()).n,1);
+ eq((await req('/api/logout',{},undefined,{cookie:signupCookie})).status,200);eq((await req('/api/me',undefined,undefined,{cookie:signupCookie})).status,401);
+ const signupLogin=await req('/api/auth/sign-in/email',{email:signupEmail,password:signupPass,rememberMe:false});eq(signupLogin.status,200,'New accounts can sign in, including passwords with spaces');eq((await req('/api/me',undefined,undefined,{cookie:cookies(signupLogin)})).data.email,signupEmail);
+ eq((await req('/api/auth/sign-in/email',{email:signupEmail,password:'incorrect-password'})).status,401);
  const login=await req('/api/auth/sign-in/email',{email:'email-qa@example.com',password:pass});eq(login.status,200,'Existing email accounts still sign in');const cookie=cookies(login);assert.match(cookie,/kamucode.session_token/);assert.match(login.headers.get('set-cookie'),/HttpOnly/);assert.match(login.headers.get('set-cookie'),/Secure/);eq((await req('/api/me',undefined,'alice',{cookie})).data.email,'email-qa@example.com');
  const out=await req('/api/logout',{},undefined,{cookie});eq(out.status,200);eq((await req('/api/me',undefined,undefined,{cookie})).status,401);eq((await req('/api/me',undefined,'alice',{cookie:cookies(out)})).status,401);
  const exported=await req('/api/data-export',undefined,'alice');eq(exported.status,200);assert.ok(!JSON.stringify(exported.data).includes('delivery_cipher'));assert.ok(!JSON.stringify(exported.data).includes('password'));
- console.log(`Passed ${count} assertions: 38+ SSR routes, real 404, CSP nonce, auth/cookie isolation, disabled signup, validation, concurrent reservations, encrypted paid delivery, support/admin/partner workflows, ownership and data export.`);
+ console.log(`Passed ${count} assertions: 38+ SSR routes, real 404, CSP nonce, auth/cookie isolation, email signup/login/logout, five-provider status, admin-email isolation, validation, concurrent reservations, encrypted paid delivery, support/admin/partner workflows, ownership and data export.`);
 }finally{await mf.dispose();}
