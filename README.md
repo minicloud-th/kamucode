@@ -4,9 +4,9 @@ A Thai, full-stack digital storefront built with React TSX, Vinext, Cloudflare W
 
 ## Experience
 
-The original kamucode symbol, blue accents, floating cards and Play / Build / Grow idea remain. The landing adds an original cinematic image/video banner, mixed game/code collections, editorial panels, partner reveal and a full footer. Motion pauses off screen and respects reduced-motion preferences. The supplied showreel is a visual reference and is not republished as kamucode work.
+The landing retains the earlier centered heading, orbiting game/code cards and Play / Build / Grow blocks, with editorial framing and a large original image/video panel informed by ArtCraft. The light partner banner with the brand reveal and the large pale closing wordmark remain as requested. The original compact floating top bar uses the vector logo, a Thai-language disclosure and Login or the authenticated avatar. Existing original media remain available on `/showcase`.
 
-Guests see the compact brand/help/Login header. Members get five Liquid Glass shortcuts, search and an avatar dropdown linking to account, orders, digital library, saved items and security. Admin navigation appears only for an authorized owner. The Thai language label is informational; there is no nonfunctional language switch.
+Member store pages retain five Liquid Glass shortcuts and search below the compact bar. The avatar dropdown keeps account, cart, orders, digital library, saved items, notifications and security available; admin navigation appears only for an authorized owner.
 
 ## Routes
 
