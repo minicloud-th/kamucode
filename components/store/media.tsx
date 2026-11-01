@@ -2,8 +2,9 @@
 import { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { Pause, Play } from 'lucide-react';
 const Reveal = lazy(() => import('@/components/ui/liquid-glass-logo-reveal').then(m => ({ default: m.GlassIconReveal })));
-export function HeroVideo({ className = '' }: {
+export function HeroVideo({ className = '', paused = false }: {
     className?: string;
+    paused?: boolean;
 }) {
     const video = useRef<HTMLVideoElement>(null), [playing, setPlaying] = useState(false), [started, setStarted] = useState(false), manual = useRef(false);
     useEffect(() => { const v = video.current; if (!v)
@@ -11,7 +12,7 @@ export function HeroVideo({ className = '' }: {
         connection?: {
             saveData?: boolean;
         };
-    }).connection; const sync = async (visible: boolean) => { if (visible && !document.hidden && !motion.matches && !connection?.saveData && !manual.current) {
+    }).connection; const sync = async (visible: boolean) => { if (visible && !document.hidden && !motion.matches && !paused && !connection?.saveData && !manual.current) {
         setStarted(true);
         if (!v.getAttribute("src")) {
             v.src = "/media/hero-motion.mp4";
@@ -28,7 +29,7 @@ export function HeroVideo({ className = '' }: {
     else {
         v.pause();
         setPlaying(false);
-    } }; let visible = false; const observer = new IntersectionObserver(([e]) => { visible = e.isIntersecting; void sync(visible); }, { threshold: .1 }); observer.observe(v); const change = () => void sync(visible); document.addEventListener('visibilitychange', change); motion.addEventListener('change', change); return () => { observer.disconnect(); document.removeEventListener('visibilitychange', change); motion.removeEventListener('change', change); v.pause(); }; }, []);
+    } }; let visible = false; const observer = new IntersectionObserver(([e]) => { visible = e.isIntersecting; void sync(visible); }, { threshold: .1 }); observer.observe(v); const change = () => void sync(visible); document.addEventListener('visibilitychange', change); motion.addEventListener('change', change); return () => { observer.disconnect(); document.removeEventListener('visibilitychange', change); motion.removeEventListener('change', change); v.pause(); }; }, [paused]);
     return <div className={'hero-video ' + className}><video ref={video} src={started ? '/media/hero-motion.mp4' : undefined} poster="/media/hero.webp" muted loop playsInline preload="none" aria-label="วิดีโอแบนเนอร์ kamucode จอยเกมและรูปทรงดิจิทัล"/><button className="video-control" aria-label={playing ? 'หยุดวิดีโอชั่วคราว' : 'เล่นวิดีโอ'} onClick={async () => { const v = video.current; if (!v)
         return; if (playing) {
         manual.current = true;

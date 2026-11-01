@@ -4,7 +4,7 @@ A Thai, full-stack digital storefront built with React TSX, Vinext, Cloudflare W
 
 ## Experience
 
-The landing retains the earlier centered heading, orbiting game/code cards and Play / Build / Grow blocks, with editorial framing and a large original image/video panel informed by ArtCraft. The light partner banner with the brand reveal and the large pale closing wordmark remain as requested. The original compact floating top bar uses the vector logo, a Thai-language disclosure and Login or the authenticated avatar. Existing original media remain available on `/showcase`.
+The landing pairs an immediate, large Thai headline with a floating game/code collage, informed by Fastwork, and an editorial motion-and-project sequence informed by Study Hall. An original image/video panel leads into a staggered six-item gallery with All / Game IDs / Source Code filters. The page includes a pause control, reduced-motion support, keyboard focus states, one-time scroll reveals, a short getting-started sequence and the retained light partner banner and pale closing wordmark. The compact floating top bar and all account screens remain in place. No reference-site fonts, code or media were copied into this refresh.
 
 Member store pages retain five Liquid Glass shortcuts and search below the compact bar. The avatar dropdown keeps account, cart, orders, digital library, saved items, notifications and security available; admin navigation appears only for an authorized owner.
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import '@/components/store/classic.css';
+import '@/components/store/landing.css';
 import '@/components/store/auth.css';
 import { StoreProvider } from '@/components/store/provider';
 import { SiteFrame } from '@/components/store/site-frame';
