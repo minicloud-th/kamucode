@@ -1,106 +1,129 @@
-.orbit-hero {position:relative;height:100svh;min-height:600px;max-height:1080px;background:#fff;color:#172035;overflow:clip;isolation:isolate;container-type:size;--orbit-x:0px;--orbit-y:0px}
+.orbit-hero {position:relative;height:100svh;min-height:600px;max-height:1100px;background:#fff;color:#16191f;overflow:clip;isolation:isolate;--orbit-x:0px;--orbit-y:0px;--scene-progress:0}
+.orbit-stage {position:absolute;inset:82px max(0px,calc((100% - 1600px)/2)) 60px;container-type:size}
 .orbit-tiles {list-style:none;margin:0;padding:0}
-.orbit-tile {position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);width:clamp(76px,calc(var(--size)*1cqw),190px);max-width:calc(var(--size)*1.68cqh);transform:translate(-50%,-50%);z-index:1;--from-x:calc((50 - var(--x))*1cqw);--from-y:calc((47 - var(--y))*1cqh)}
-.orbit-entry {transform:rotate(var(--angle));transform-origin:center}
-.orbit-drift {animation:orbit-float calc(8s + var(--order)*.7s) ease-in-out infinite alternate;animation-delay:calc(var(--order)*-.85s);translate:var(--orbit-x) var(--orbit-y);transition:translate .7s ease-out}
-.orbit-product {display:block;text-align:center;outline-offset:7px;transition:transform .25s}
-.orbit-image {position:relative;aspect-ratio:1/.94;overflow:hidden;border-radius:12px;background:#edf1f9;box-shadow:0 6px 18px #17203508;transition:box-shadow .25s}
-.orbit-image>img {width:100%;height:100%;display:block;object-fit:cover;transition:transform .6s cubic-bezier(.2,.65,.3,1)}
-.orbit-image.is-source {aspect-ratio:1.12}
-.orbit-image>span {position:absolute;inset:auto 8px 8px auto;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#fffffff2;color:#172035;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s}
-.orbit-product>strong {display:block;font-size:11px;line-height:1.4;font-weight:550;margin:10px -15px 0;letter-spacing:-.02em}
-.orbit-product>small {display:block;font-size:8px;line-height:1.5;color:#8b919d;margin:3px -12px 0}
-.orbit-product:is(:hover,:focus-visible) {transform:translateY(-5px)}
-.orbit-product:is(:hover,:focus-visible) .orbit-image {box-shadow:0 14px 30px #17203517}
-.orbit-product:is(:hover,:focus-visible) .orbit-image>img {transform:scale(1.05)}
-.orbit-product:is(:hover,:focus-visible) .orbit-image>span {opacity:1;transform:none}
-.orbit-copy {position:absolute;left:50%;top:49%;width:min(440px,44%);transform:translate(-50%,-50%);text-align:center;z-index:2}
-.orbit-eyebrow {display:block;font:8px/1.5 ui-monospace,monospace;letter-spacing:.13em;color:#8992a4;margin-bottom:17px}
-.orbit-copy h1 {font-size:clamp(44px,4.8vw,66px);font-weight:550;line-height:1.18;letter-spacing:-.055em;color:#172035;margin:0}
+.orbit-tile {position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);width:min(calc(var(--size)*1cqw),calc(var(--size)*1.55cqh));transform:translate(-50%,-50%);z-index:1;--from-x:calc((50 - var(--x))*1cqw);--from-y:calc((50 - var(--y))*1cqh)}
+.orbit-travel {transform:translate(calc(var(--scatter-x)*var(--scene-progress)),calc(var(--scatter-y)*var(--scene-progress)))}
+.orbit-entry {transform:perspective(750px) rotate(var(--angle)) rotateY(var(--tilt));transform-origin:center}
+.orbit-drift {animation:orbit-float calc(10s + var(--order)*.65s) ease-in-out infinite alternate;animation-delay:calc(var(--order)*-.9s);translate:calc(var(--orbit-x)*var(--depth)) calc(var(--orbit-y)*var(--depth));transition:translate .8s ease-out}
+.orbit-product {display:block;width:100%;padding:0;border:0;background:none;text-align:center;color:inherit;outline-offset:7px;transition:transform .3s;cursor:pointer}
+.orbit-image {display:block;position:relative;aspect-ratio:var(--ratio);overflow:hidden;border-radius:9px;background:#edf1f7;box-shadow:1px 1px 0 #17203508;isolation:isolate}
+.orbit-image:after {content:'';position:absolute;inset:0;border:1px solid #17203508;border-radius:inherit;pointer-events:none}
+.orbit-image>img {width:100%;height:100%;display:block;object-fit:cover;transition:transform .7s cubic-bezier(.2,.65,.3,1)}
+.orbit-image.is-source>img {object-position:center}
+.orbit-image.is-space {background:#f1f3f7;border-radius:5px}
+.orbit-image.is-space>img {object-fit:contain;padding:3px}
+.orbit-image.is-film {background:#122944}
+.orbit-image.is-film>img {object-position:47% center}
+.orbit-film-play {position:absolute;left:50%;top:50%;display:grid;place-items:center;width:30px;height:30px;border:1px solid #ffffff94;border-radius:50%;background:#ffffffd9;color:#172035;transform:translate(-50%,-50%);backdrop-filter:blur(4px)}
+.orbit-caption {display:block;font-size:11px;line-height:1.35;font-weight:400;margin:9px -22px 0;letter-spacing:-.035em}
+.orbit-product:is(:hover,:focus-visible) {transform:translateY(-6px) scale(1.04)}
+.orbit-product:is(:hover,:focus-visible) .orbit-image>img {transform:scale(1.035)}
+.orbit-copy {position:absolute;left:50%;top:50%;width:min(470px,48%);transform:translate(-50%,-50%);text-align:center;z-index:2}
+.orbit-copy-content {opacity:clamp(0,calc(1 - var(--scene-progress)*1.8),1);transform:scale(calc(1 - var(--scene-progress)*.045))}
+.orbit-copy h1 {display:inline-block;text-align:left;font-size:clamp(34px,3.5vw,49px);font-weight:400;line-height:1.13;letter-spacing:-.055em;color:#15191f;margin:0}
 .orbit-copy h1>span {display:block}
 .orbit-period {color:#3159ec}
-.orbit-copy>p {font-size:13px;line-height:1.9;font-weight:400;color:#7b8494;margin-top:17px}
-.orbit-actions {display:flex;justify-content:center;align-items:center;gap:10px;margin-top:23px}
-.orbit-actions :is(a,button) {display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:43px;border-radius:99px;padding:11px 19px;font-size:12px;line-height:1.4;font-weight:500;white-space:nowrap;transition:background .2s,color .2s,transform .2s}
-.orbit-explore {border:1px solid #172035;background:#172035;color:#fff}
-.orbit-explore:hover {background:#3159ec;border-color:#3159ec;transform:translateY(-2px)}
-.orbit-signin {border:1px solid #e0e5ed;background:#fff;color:#172035}
-.orbit-signin:hover {background:#f1f4fa;transform:translateY(-2px)}
-.orbit-copy>.orbit-signup {display:flex;align-items:center;justify-content:center;gap:7px;font-size:10px;color:#969dab;margin-top:14px}
-.orbit-signup a {display:inline-flex;align-items:center;gap:3px;color:#5e6b86;text-underline-offset:4px}
-.orbit-signup a:hover {text-decoration:underline;color:#3159ec}
-.orbit-controls {position:absolute;bottom:19px;left:36px;right:36px;display:flex;align-items:center;justify-content:space-between;gap:15px;z-index:4}
-.orbit-controls>button {display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;background:none;border:0;color:#8b93a1;font-size:10px;line-height:1.4;padding:5px 0;transition:color .2s}
+.orbit-copy p {font-size:12px;line-height:1.65;font-weight:400;color:#717680;margin-top:17px}
+.orbit-actions {display:flex;justify-content:center;align-items:center;gap:14px;margin-top:12px}
+.orbit-actions :is(a,button) {display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:6px 0;border:0;border-radius:0;background:none;color:#343c4c;font-size:11px;line-height:1.4;font-weight:400;white-space:nowrap;text-underline-offset:5px}
+.orbit-actions :is(a,button):hover {color:#3159ec;text-decoration:underline}
+.orbit-actions>span {font-size:9px;color:#c5c9d0}
+.orbit-controls {position:absolute;bottom:13px;left:30px;right:30px;display:flex;align-items:center;justify-content:space-between;gap:15px;z-index:4}
+.orbit-controls>button {display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:36px;background:none;border:0;color:#6b7380;font-size:9px;line-height:1.4;padding:5px 0;transition:color .2s}
 .orbit-controls>button:hover {color:#3159ec}
-.orbit-controls>button:disabled {cursor:default;color:#a6adb9}
-.orbit-controls>.orbit-scroll {position:absolute;left:50%;transform:translateX(-50%);flex-direction:column;gap:6px;font:7px/1.5 ui-monospace,monospace;letter-spacing:.12em}
+.orbit-controls>button:disabled {cursor:default;color:#abb1ba}
 .orbit-controls>.orbit-motion {font:8px/1.5 ui-monospace,monospace;letter-spacing:.06em}
-.orbit-intro {position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;z-index:3;background:#fff;pointer-events:none;visibility:hidden;opacity:0}
-.orbit-intro>img {width:100px;height:100px}
-.orbit-intro>span {font:8px ui-monospace,monospace;letter-spacing:.21em;color:#7b8494}
+.orbit-collection-note {position:absolute;left:50%;transform:translateX(-50%);font-size:9px;color:#6e7683;white-space:nowrap}
+.orbit-intro {position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:17px;z-index:3;background:#fff;pointer-events:none;visibility:hidden;opacity:0}
+.orbit-intro>img {width:94px;height:94px}
+.orbit-intro>span {font:7px ui-monospace,monospace;letter-spacing:.2em;color:#7b8494}
 .orbit-hero[data-intro=true] .orbit-intro {visibility:visible;animation:orbit-logo-stage 1.05s ease both}
 .orbit-hero[data-intro=true] .orbit-intro>img {animation:orbit-logo-in 1.05s cubic-bezier(.16,1,.3,1) both}
-.orbit-hero[data-intro=true] .orbit-entry {animation:orbit-arrive 1.18s cubic-bezier(.16,1,.3,1) calc(.42s + var(--order)*.045s) both}
+.orbit-hero[data-intro=true] .orbit-entry {animation:orbit-arrive 1.25s cubic-bezier(.16,1,.3,1) calc(.42s + var(--order)*.04s) both}
 .orbit-hero[data-intro=true] .orbit-drift {animation-play-state:paused;translate:0 0}
-.orbit-hero[data-intro=true] .orbit-copy {animation:orbit-copy-in .85s cubic-bezier(.16,1,.3,1) .78s both}
+.orbit-hero[data-intro=true] .orbit-copy {animation:orbit-copy-in .85s cubic-bezier(.16,1,.3,1) .92s both}
 .orbit-hero[data-still=true] .orbit-drift,.orbit-hero[data-active=false] .orbit-drift {animation-play-state:paused;translate:0 0;transition:none}
-@keyframes orbit-float {from {transform:translateY(-5px) rotate(-1deg)} to {transform:translateY(6px) rotate(1deg)}}
-@keyframes orbit-arrive {0% {opacity:0;transform:translate(var(--from-x),var(--from-y)) rotate(calc(var(--angle) - 35deg)) scale(.18)} 22% {opacity:1} 100% {opacity:1;transform:rotate(var(--angle))}}
-@keyframes orbit-logo-in {0% {transform:scale(.62) rotate(-75deg)} 40% {transform:scale(1) rotate(0deg)} 100% {transform:scale(.85) rotate(24deg)}}
+@keyframes orbit-float {from {transform:translateY(-4px) rotate(-.6deg)} to {transform:translateY(5px) rotate(.6deg)}}
+@keyframes orbit-arrive {0% {opacity:0;transform:translate(var(--from-x),var(--from-y)) perspective(750px) rotate(calc(var(--angle) - 24deg)) rotateY(70deg) scale(.25)} 25% {opacity:1} 100% {opacity:1;transform:perspective(750px) rotate(var(--angle)) rotateY(var(--tilt))}}
+@keyframes orbit-logo-in {0% {transform:scale(.6) rotate(-70deg)} 44% {transform:scale(1) rotate(0deg)} 100% {transform:scale(.88) rotate(25deg)}}
 @keyframes orbit-logo-stage {0% {opacity:1} 58% {opacity:1} 100% {opacity:0;visibility:hidden}}
-@keyframes orbit-copy-in {from {opacity:0;transform:translate(-50%,calc(-50% + 16px))} to {opacity:1;transform:translate(-50%,-50%)}}
-@media (max-height:720px) and (min-width:761px) {
-    .orbit-tile-valorant {--y:30!important;--size:12.4!important}
-    .orbit-tile-storefront {--x:34!important;--y:25!important;--size:8.2!important}
-    .orbit-tile-minecraft {--x:67!important;--y:26!important;--size:9.5!important}
-    .orbit-tile-dashboard {--y:30!important;--size:13.4!important}
-    .orbit-copy h1 {font-size:49px}
-    .orbit-eyebrow {margin-bottom:12px;font-size:7px}
-    .orbit-copy>p {font-size:12px;margin-top:14px}
-    .orbit-actions {margin-top:18px}
-    .orbit-copy>.orbit-signup {margin-top:11px}
-    .orbit-product>strong {font-size:10px;margin-top:8px}
-    .orbit-product>small {font-size:7px}
+@keyframes orbit-copy-in {from {opacity:0;transform:translate(-50%,calc(-50% + 14px))} to {opacity:1;transform:translate(-50%,-50%)}}
+@media (max-height:760px) and (min-width:761px) {
+    .orbit-stage {top:94px;bottom:52px}
+    .orbit-tile {width:min(calc(var(--size)*1cqw),calc(var(--size)*1.43cqh))}
+    .orbit-tile-valorant {--y:24!important;width:min(calc(var(--size)*1cqw),calc(var(--size)*2.25cqh))}
+    .orbit-tile-storefront {--y:22!important}
+    .orbit-tile-minecraft {--y:13!important;--size:9!important}
+    .orbit-tile-dashboard {--y:24!important;width:min(calc(var(--size)*1cqw),calc(var(--size)*2.25cqh))}
+    .orbit-tile-roblox {--x:9!important;width:min(calc(var(--size)*1cqw),calc(var(--size)*2.1cqh))}
+    .orbit-tile-genshin {--x:94!important;width:min(calc(var(--size)*1cqw),calc(var(--size)*2.1cqh))}
+    .orbit-tile-discord-bot {--y:78!important;width:min(calc(var(--size)*1cqw),calc(var(--size)*2.25cqh))}
+    .orbit-tile-film {--y:80!important;width:min(calc(var(--size)*1cqw),calc(var(--size)*2.25cqh))}
+    .orbit-tile-saas-starter {--y:90!important;width:min(calc(var(--size)*1cqw),calc(var(--size)*1.8cqh))}
+    .orbit-copy h1 {font-size:40px}
+    .orbit-copy p {font-size:11px;margin-top:13px}
+    .orbit-actions {margin-top:8px}
+    .orbit-actions :is(a,button) {font-size:10px;min-height:34px}
+    .orbit-caption {font-size:9px;margin-top:7px}
+    .orbit-controls {bottom:6px}
 }
-@media (min-width:1600px) {.orbit-tiles {position:absolute;inset:0 calc((100% - 1600px)/2)} .orbit-tile {--from-x:calc((50 - var(--x))*16px)}}
-@media (max-width:1000px) and (min-width:761px) {
-    .orbit-copy {width:46%}
-    .orbit-copy h1 {font-size:46px}
-    .orbit-product>strong {font-size:9px}
-    .orbit-product>small {font-size:7px}
-    .orbit-actions :is(a,button) {padding-inline:14px;font-size:11px;gap:8px}
+@media (min-width:761px) and (max-width:1000px) {
+    .orbit-stage {top:90px}
+    .orbit-copy {width:45%}
+    .orbit-copy h1 {font-size:34px}
+    .orbit-copy p {font-size:11px}
+    .orbit-tile {width:calc(var(--size)*1cqw)}
+    .orbit-tile-storefront {--x:37!important;--y:20!important}
+    .orbit-tile-dashboard {--x:79!important}
+    .orbit-tile-roblox {--x:7.5!important}
+    .orbit-tile-genshin {--x:95.5!important}
+    .orbit-tile-minecraft {--y:10!important}
+    .orbit-tile-saas-starter {--y:88!important}
+    .orbit-caption {font-size:9px}
 }
 @media (max-width:760px) {
-    .orbit-hero {min-height:620px;max-height:960px}
-    .orbit-tile {max-width:none;width:calc(var(--size)*1cqw)}
-    .orbit-tile-valorant {--x:15!important;--y:21!important;--size:22!important;--angle:-12deg!important}
-    .orbit-tile-storefront {--x:50!important;--y:16!important;--size:18!important;--angle:6deg!important}
-    .orbit-tile-minecraft {--x:84!important;--y:21!important;--size:21!important;--angle:10deg!important}
-    .orbit-tile-dashboard {--x:83!important;--y:80!important;--size:24!important;--angle:9deg!important}
-    .orbit-tile-roblox {--x:15!important;--y:81!important;--size:20!important;--angle:-9deg!important}
-    .orbit-tile-genshin {--x:49!important;--y:85!important;--size:22!important;--angle:-5deg!important}
-    .orbit-tile-discord-bot,.orbit-tile-saas-starter {display:none}
-    .orbit-image {border-radius:9px}
-    .orbit-image>span {display:none}
-    .orbit-product>strong {font-size:9px;margin-top:7px}
-    .orbit-product>small {font-size:6px;margin-top:2px}
-    .orbit-copy {top:49%;width:calc(100% - 52px);max-width:420px}
-    .orbit-eyebrow {font-size:6px;letter-spacing:.1em;margin-bottom:14px}
-    .orbit-copy h1 {font-size:40px;line-height:1.2}
-    .orbit-copy>p {font-size:12px;margin-top:14px;line-height:1.85}
-    .orbit-actions {gap:8px;margin-top:19px}
-    .orbit-actions :is(a,button) {min-height:40px;font-size:11px;padding:10px 15px;gap:8px}
-    .orbit-copy>.orbit-signup {font-size:9px;margin-top:13px}
-    .orbit-controls {left:20px;right:20px;bottom:9px;gap:10px}
-    .orbit-controls>button {font-size:9px;gap:6px}
-    .orbit-controls>.orbit-scroll {display:none}
+    .orbit-hero {min-height:620px;max-height:1000px}
+    .orbit-stage {inset:80px 0 50px}
+    .orbit-tile {width:calc(var(--size)*1cqw);--tilt:0deg!important}
+    .orbit-tile-valorant {--x:18!important;--y:14!important;--size:25!important;--angle:12deg!important}
+    .orbit-tile-storefront {--x:43!important;--y:17!important;--size:12!important;--angle:3deg!important}
+    .orbit-tile-minecraft {--x:64!important;--y:9!important;--size:15!important;--angle:-4deg!important}
+    .orbit-tile-dashboard {--x:85!important;--y:18!important;--size:22!important;--angle:-14deg!important}
+    .orbit-tile-roblox {--x:10!important;--y:49!important;--size:13.5!important;--angle:-2deg!important}
+    .orbit-tile-genshin {--x:90!important;--y:49!important;--size:13!important;--angle:4deg!important}
+    .orbit-tile-discord-bot {--x:20!important;--y:81!important;--size:22!important;--angle:-11deg!important}
+    .orbit-tile-saas-starter {--x:48!important;--y:91!important;--size:18!important;--angle:2deg!important}
+    .orbit-tile-space {--x:63!important;--y:79!important;--size:11!important;--angle:8deg!important}
+    .orbit-tile-film {--x:82!important;--y:84!important;--size:21!important;--angle:12deg!important}
+    .orbit-image {border-radius:6px}
+    .orbit-caption {font-size:8px;margin:7px -14px 0}
+    .orbit-tile-storefront .orbit-caption,.orbit-tile-space .orbit-caption {font-size:7px}
+    .orbit-film-play {width:21px;height:21px}
+    .orbit-film-play>svg {width:10px;height:10px}
+    .orbit-copy {top:50%;width:68%;max-width:320px}
+    .orbit-copy h1 {font-size:32px;line-height:1.17;letter-spacing:-.055em}
+    .orbit-copy p {font-size:10px;line-height:1.8;margin-top:13px;margin-inline:-10px}
+    .orbit-actions {gap:11px;margin-top:9px}
+    .orbit-actions :is(a,button) {font-size:9px;gap:5px;min-height:36px}
+    .orbit-actions svg {width:10px}
+    .orbit-controls {left:17px;right:17px;bottom:5px;gap:10px}
+    .orbit-controls>button {font-size:9px;gap:5px}
     .orbit-controls>.orbit-motion {font-size:7px}
-    .orbit-intro>img {width:82px;height:82px}
+    .orbit-collection-note {display:none}
+    .orbit-intro>img {width:78px;height:78px}
 }
-@media (max-width:360px) {.orbit-copy h1 {font-size:35px} .orbit-copy>p {font-size:11px} .orbit-actions :is(a,button) {padding-inline:13px;font-size:10px} .orbit-controls {left:14px;right:14px} .orbit-product>strong {font-size:8px} .orbit-product>small {font-size:5.5px}}
+@media (max-width:360px) {
+    .orbit-copy h1 {font-size:28px}
+    .orbit-copy p {font-size:9px}
+    .orbit-actions {gap:8px}
+    .orbit-actions :is(a,button) {font-size:8px;gap:4px}
+    .orbit-caption {font-size:7px}
+    .orbit-tile-storefront .orbit-caption,.orbit-tile-space .orbit-caption {font-size:6px}
+}
 @media (prefers-reduced-motion:reduce) {
     .orbit-hero .orbit-intro {display:none!important}
     .orbit-hero :is(.orbit-entry,.orbit-drift,.orbit-copy) {animation:none!important}
+    .orbit-hero :is(.orbit-travel,.orbit-copy-content) {transform:none;opacity:1}
     .orbit-hero .orbit-drift {translate:0 0!important;transition:none}
-    .orbit-hero :is(.orbit-product,.orbit-image,.orbit-image>img,.orbit-actions>a,.orbit-actions>button) {transition:none}
+    .orbit-hero :is(.orbit-product,.orbit-image>img) {transition:none}
 }

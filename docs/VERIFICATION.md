@@ -47,10 +47,20 @@ In browser QA, Login fits 1365×631 and 390×844 frames and Signup fits a 320×6
 
 The revised hero also fits 390px and 320px mobile frames without horizontal overflow; measured copy and avatar regions remain separate. The initial dark header is rechecked after layout changes so the retained top bar renders readable immediately.
 
-## White orbit hero and logo opening
+## Previous release: white orbit hero and logo opening
 
 The supplied Superpower screenshot guides the white composition with tilted collection imagery around centered copy. The supplied logo collage guides an original SVG orbit-and-spark emblem. Six primary SVG logo variants and the light/dark-aware favicon use the new symbol; the original wordmark paths were compared byte-for-byte across four composite and two standalone variants. The earlier KC mascot monogram is retained separately for the Login/Signup avatar.
 
 The hero links eight existing products on desktop and displays six on mobile. A two-second opening rotates the emblem, spreads the images outward and reveals the headline. Browser checks confirm replay starts the actual logo/tile/copy animations, Skip restores full opacity, and pausing during the opening immediately reveals the copy while floating animations become paused. Resuming does not automatically restart the opening. Reduced-motion CSS and media-query handling show the final composition directly; browser preference emulation was unavailable.
 
 Responsive iframe checks at 1365×631, 390×844 and 320×631 show no horizontal overflow and keep the central copy separate from the collection images. The short desktop layout lowers the first row below the retained header. The header starts in its light style and still detects lower dark sections. The original film, gallery filters, partner banner, closing wordmark and native account navigation remain in place. Temporary viewport QA files are removed before packaging.
+
+## Asymmetric presentation revision
+
+The supplied Superpower image and sampled frames from the supplied Fastwork recording guide this revision. Ten images now combine portrait, square and landscape formats at different sizes. The central three-line headline uses the existing typeface at a lighter weight, with compact text actions. The original logo, top bar, account pages and lower landing sections are retained.
+
+Browser layout checks covered 1365×631, 800×631, 390×844 and 320×631 frames. The measured desktop/tablet image rectangles have no pairwise overlap after positioning adjustments, and none of the tested frames has horizontal overflow. On the short desktop, the first image starts below the header and the last image ends within the 631px hero. All ten images remain present on mobile.
+
+Replay activates the actual emblem and perspective-entry animations. Pausing during the introduction reveals the copy at full opacity and pauses image floating. Pointer motion changes image offsets at different depths. At scroll progress 0.25, the first image travels by -49px/-38.75px and copy opacity becomes 0.55; scrolling remains native. Reduced-motion handling is implemented in CSS and the effects, but browser preference emulation was unavailable.
+
+The film tile starts scrolling toward the existing video section. Its final playback/pause check could not finish: browser automatic approval review denied page observation because the usage quota was exhausted. No successful playback result is claimed for this revision. The final code change replaces an image wrapper with a block-level span to keep the film button's markup valid; it does not change the measured dimensions. Temporary responsive QA pages are removed before the release build. TypeScript, the production build and the disposable Worker/D1 integration suite validate the final source before publication.

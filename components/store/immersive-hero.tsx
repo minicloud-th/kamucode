@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect, useRef, useState, type CSSProperties} from 'react';
-import {ArrowDown, ArrowUpRight, Pause, Play, RotateCcw, SkipForward} from 'lucide-react';
+import {ArrowUpRight, Pause, Play, RotateCcw, SkipForward} from 'lucide-react';
 import type {Product} from '@/lib/commerce/types';
 import Link from './navigation-link';
 
@@ -15,15 +15,18 @@ type HeroProps = {
     onFilm: () => void;
 };
 
-const orbit = [
-    {id: 'valorant', x: 15, y: 24, size: 13.2, angle: -13},
-    {id: 'storefront', x: 38, y: 17, size: 8.4, angle: 7},
-    {id: 'minecraft', x: 65, y: 17, size: 10.1, angle: -7},
-    {id: 'dashboard', x: 86, y: 25, size: 14.3, angle: 12},
-    {id: 'roblox', x: 9, y: 57, size: 8.6, angle: -6},
-    {id: 'genshin', x: 91, y: 60, size: 10, angle: 7},
-    {id: 'discord-bot', x: 28, y: 82, size: 12.2, angle: 11},
-    {id: 'saas-starter', x: 76, y: 83, size: 12.5, angle: -10},
+type OrbitSlot = {id: string; x: number; y: number; size: number; ratio: number; angle: number; tilt: number};
+const orbit: OrbitSlot[] = [
+    {id: 'valorant', x: 22, y: 19, size: 16, ratio: 1.06, angle: 13, tilt: -16},
+    {id: 'storefront', x: 38.5, y: 22.5, size: 6.4, ratio: .76, angle: 5, tilt: -11},
+    {id: 'minecraft', x: 51, y: 13, size: 9.7, ratio: .8, angle: -4, tilt: 13},
+    {id: 'dashboard', x: 80.5, y: 20, size: 19, ratio: 1.3, angle: -14, tilt: -19},
+    {id: 'roblox', x: 15.5, y: 48, size: 8.6, ratio: .78, angle: 2, tilt: 16},
+    {id: 'genshin', x: 86, y: 48, size: 8.3, ratio: .72, angle: -4, tilt: -14},
+    {id: 'discord-bot', x: 23, y: 79, size: 14.3, ratio: .92, angle: -13, tilt: 16},
+    {id: 'saas-starter', x: 50.5, y: 88, size: 12.2, ratio: 1, angle: 2, tilt: -8},
+    {id: 'space', x: 65.5, y: 73, size: 5.8, ratio: .69, angle: 8, tilt: -10},
+    {id: 'film', x: 80, y: 82, size: 13.4, ratio: .86, angle: 12, tilt: -17},
 ];
 
 const imageFor = (p: Product) => p.kind === 'game' && ['valorant', 'roblox', 'minecraft', 'genshin'].includes(p.id)
@@ -36,9 +39,7 @@ export function ImmersiveHero({products, authenticated, paused, reduced, onToggl
     const [replay, setReplay] = useState(0);
     const still = paused || reduced;
     const opening = stage === 'playing' && !still;
-    const tiles = orbit.map(slot => ({...slot, product: products.find(p => p.id === slot.id)})).filter(slot => slot.product);
 
-    // The server-rendered hero stays usable before hydration and without JavaScript.
     useEffect(() => {
         const frame = requestAnimationFrame(() => setStage(matchMedia('(prefers-reduced-motion: reduce)').matches ? 'done' : 'playing'));
         return () => cancelAnimationFrame(frame);
@@ -46,7 +47,7 @@ export function ImmersiveHero({products, authenticated, paused, reduced, onToggl
 
     useEffect(() => {
         if (stage !== 'playing') return;
-        const timer = setTimeout(() => setStage('done'), still ? 0 : 2050);
+        const timer = setTimeout(() => setStage('done'), still ? 0 : 2200);
         return () => clearTimeout(timer);
     }, [stage, still, replay]);
 
@@ -57,8 +58,10 @@ export function ImmersiveHero({products, authenticated, paused, reduced, onToggl
         const render = () => {
             frame = 0;
             if (!visible || document.hidden) return;
-            node.style.setProperty('--orbit-x', x * 14 + 'px');
-            node.style.setProperty('--orbit-y', y * 10 + 'px');
+            const rect = node.getBoundingClientRect();
+            node.style.setProperty('--orbit-x', x * 18 + 'px');
+            node.style.setProperty('--orbit-y', y * 12 + 'px');
+            node.style.setProperty('--scene-progress', String(Math.max(0, Math.min(1, -rect.top / rect.height))));
         };
         const queue = () => {if (!frame && visible && !document.hidden) frame = requestAnimationFrame(render);};
         const move = (event: PointerEvent) => {
@@ -76,12 +79,15 @@ export function ImmersiveHero({products, authenticated, paused, reduced, onToggl
         observer.observe(node);
         const fine = matchMedia('(pointer: fine)').matches;
         if (fine) {node.addEventListener('pointermove', move, {passive: true}); node.addEventListener('pointerleave', reset, {passive: true});}
+        addEventListener('scroll', queue, {passive: true});
+        addEventListener('resize', queue, {passive: true});
         document.addEventListener('visibilitychange', visibility);
         return () => {
             observer.disconnect(); cancelAnimationFrame(frame);
             node.removeEventListener('pointermove', move); node.removeEventListener('pointerleave', reset);
+            removeEventListener('scroll', queue); removeEventListener('resize', queue);
             document.removeEventListener('visibilitychange', visibility);
-            node.style.removeProperty('--orbit-x'); node.style.removeProperty('--orbit-y');
+            for (const key of ['--orbit-x', '--orbit-y', '--scene-progress']) node.style.removeProperty(key);
             delete node.dataset.active;
         };
     }, [still]);
@@ -94,29 +100,31 @@ export function ImmersiveHero({products, authenticated, paused, reduced, onToggl
     }
 
     return <section ref={hero} className="orbit-hero" aria-labelledby="studio-heading" data-intro={opening} data-still={still}>
-        <div className="orbit-intro" key={'intro-' + replay} aria-hidden="true"><img src="/assets/brand/mark.svg" width="128" height="128" alt=""/><span>PLAY. BUILD. GROW.</span></div>
-        <ul className="orbit-tiles" aria-label="ค้นพบเกมและซอร์สโค้ด">
-            {tiles.map(slot => {
-                const p = slot.product!;
-                const index = orbit.findIndex(item => item.id === slot.id);
-                return <li className={'orbit-tile orbit-tile-' + slot.id} key={slot.id} style={{'--x': slot.x, '--y': slot.y, '--size': slot.size, '--angle': slot.angle + 'deg', '--order': index} as CSSProperties}>
-                    <div className="orbit-entry" key={replay}><div className="orbit-drift"><Link href={'/product/' + p.id} className="orbit-product" aria-label={'ดูรายละเอียด ' + p.name}>
-                        <div className={'orbit-image is-' + p.kind}><img src={imageFor(p)} width="480" height="480" alt="" decoding="async" draggable={false}/><span><ArrowUpRight size={16}/></span></div>
-                        <strong>{p.name}</strong><small>{p.demo ? 'คอลเลกชันตัวอย่าง' : p.kind === 'game' ? 'ไอดีเกม' : 'ซอร์สโค้ด'}</small>
-                    </Link></div></div>
-                </li>;
-            })}
-        </ul>
-        <div className="orbit-copy" key={'copy-' + replay}>
-            <span className="orbit-eyebrow">A LITTLE PLAY. A BIG POSSIBILITY.</span>
-            <h1 id="studio-heading">เล่นให้สุด<span>สร้างให้ไกล<span className="orbit-period">.</span></span></h1>
-            <p>เกมที่อยากเล่น โค้ดที่อยากสร้าง<br/>และพื้นที่ให้ไอเดียของคุณเติบโตไปด้วยกัน</p>
-            <div className="orbit-actions"><button type="button" className="orbit-explore" onClick={onExplore}>ค้นพบสิ่งที่ชอบ <ArrowUpRight size={16}/></button><Link href={authenticated ? '/shop' : '/login'} className="orbit-signin">{authenticated ? 'เข้าสู่ร้านค้า' : 'เข้าสู่ระบบ'} <ArrowUpRight size={15}/></Link></div>
-            {!authenticated && <p className="orbit-signup">เริ่มต้นพื้นที่ของคุณ <Link href="/signup">สมัครสมาชิก <ArrowUpRight size={11}/></Link></p>}
+        <div className="orbit-stage">
+            <div className="orbit-intro" key={'intro-' + replay} aria-hidden="true"><img src="/assets/brand/mark.svg" width="128" height="128" alt=""/><span>PLAY. BUILD. GROW.</span></div>
+            <ul className="orbit-tiles" aria-label="ค้นพบเกม ซอร์สโค้ด และพื้นที่สร้างสรรค์">
+                {orbit.map((slot, index) => {
+                    const product = products.find(p => p.id === slot.id);
+                    if (!product && slot.id !== 'space' && slot.id !== 'film') return null;
+                    const name = product?.name || (slot.id === 'film' ? 'Play. Build. Grow.' : authenticated ? 'บัญชีของคุณ' : 'สมัครสมาชิก');
+                    const image = product ? imageFor(product) : slot.id === 'film' ? '/media/hero.webp' : '/media/hero-avatar-kc-v2.webp';
+                    const content = <><span className={'orbit-image is-' + (product?.kind || slot.id)}><img src={image} width="480" height="600" alt="" decoding="async" draggable={false}/>{slot.id === 'film' && <span className="orbit-film-play"><Play size={14} fill="currentColor"/></span>}</span><span className="orbit-caption">{name}</span>{product?.demo && <span className="sr-only">คอลเลกชันตัวอย่าง</span>}</>;
+                    return <li className={'orbit-tile orbit-tile-' + slot.id} key={slot.id} style={{'--x': slot.x, '--y': slot.y, '--size': slot.size, '--ratio': slot.ratio, '--angle': slot.angle + 'deg', '--tilt': slot.tilt + 'deg', '--order': index, '--depth': .4 + slot.size / 12, '--scatter-x': (slot.x - 50) * 7 + 'px', '--scatter-y': (slot.y - 50) * 5 + 'px'} as CSSProperties}>
+                        <div className="orbit-travel"><div className="orbit-entry" key={replay}><div className="orbit-drift">
+                            {slot.id === 'film' ? <button type="button" className="orbit-product" onClick={onFilm} aria-label="ดูวิดีโอแนะนำ kamucode">{content}</button> : <Link href={product ? '/product/' + product.id : authenticated ? '/account' : '/signup'} className="orbit-product" aria-label={product ? 'ดูรายละเอียด ' + product.name : authenticated ? 'เปิดบัญชีของคุณ' : 'สมัครสมาชิก'}>{content}</Link>}
+                        </div></div></div>
+                    </li>;
+                })}
+            </ul>
+            <div className="orbit-copy" key={'copy-' + replay}><div className="orbit-copy-content">
+                <h1 id="studio-heading">เล่นให้สุด<span>สร้างให้ไกล</span><span>ในแบบของคุณ<span className="orbit-period">.</span></span></h1>
+                <p>เกมที่อยากเล่น โค้ดที่อยากสร้าง<br/>และพื้นที่ให้ไอเดียของคุณเติบโตไปด้วยกัน</p>
+                <div className="orbit-actions"><button type="button" onClick={onExplore}>สำรวจคอลเลกชัน <ArrowUpRight size={13}/></button><span aria-hidden="true">/</span><Link href={authenticated ? '/shop' : '/login'}>{authenticated ? 'เข้าสู่ร้านค้า' : 'เข้าสู่ระบบ'} <ArrowUpRight size={13}/></Link></div>
+            </div></div>
         </div>
         <div className="orbit-controls">
-            {opening ? <button type="button" className="orbit-replay" onClick={() => setStage('done')}><SkipForward size={13}/>ข้ามอนิเมชั่นเปิดตัว</button> : <button type="button" className="orbit-replay" onClick={replayIntro} disabled={reduced} title={reduced ? 'ปิดอนิเมชั่นตามการตั้งค่าอุปกรณ์' : undefined}><RotateCcw size={13}/>เล่นเปิดตัวอีกครั้ง</button>}
-            <button type="button" className="orbit-scroll" onClick={onFilm} aria-label="เลื่อนไปวิดีโอ"><ArrowDown size={16}/><span>SCROLL TO DISCOVER</span></button>
+            {opening ? <button type="button" className="orbit-replay" onClick={() => setStage('done')}><SkipForward size={12}/>ข้ามอนิเมชั่นเปิดตัว</button> : <button type="button" className="orbit-replay" onClick={replayIntro} disabled={reduced} title={reduced ? 'ปิดอนิเมชั่นตามการตั้งค่าอุปกรณ์' : undefined}><RotateCcw size={12}/>เล่นเปิดตัวอีกครั้ง</button>}
+            <span className="orbit-collection-note">ภาพจากคอลเลกชันตัวอย่าง</span>
             <button className="orbit-motion" type="button" onClick={onToggleMotion} aria-pressed={paused} disabled={reduced} aria-label={reduced ? 'ปิดอนิเมชั่นตามการตั้งค่าอุปกรณ์' : paused ? 'เล่นอนิเมชั่น' : 'หยุดอนิเมชั่น'}>{still ? <Play size={12}/> : <Pause size={12}/>}<span>{reduced ? 'REDUCED MOTION' : paused ? 'MOTION OFF' : 'MOTION ON'}</span></button>
         </div>
     </section>;
