@@ -82,10 +82,20 @@ bindForm('#auth-form',async form=>{
  formMessage(form,'กำลังพาเข้าหน้าหลัก…',true);await finishRegistration(signup?body.name:undefined);
 });
 if($('#auth-form')){
+ const emailChoice=$('[data-auth-email]'),emailPanel=$('#km-email-panel'),authChoices=$('[data-auth-choices]'),authBack=$('[data-auth-back]'),authStatus=$('[data-auth-service-status]');
+ if(emailChoice&&emailPanel&&authChoices){
+  let choiceStatus='';
+  emailChoice.onclick=()=>{choiceStatus=authStatus?.textContent||'';if(authStatus)authStatus.textContent='เข้าสู่ระบบด้วยอีเมลและรหัสผ่าน';authChoices.hidden=true;emailPanel.hidden=false;emailChoice.setAttribute('aria-expanded','true');$('#auth-email').focus();};
+  authBack.onclick=()=>{if(authStatus)authStatus.textContent=choiceStatus;emailPanel.hidden=true;authChoices.hidden=false;emailChoice.setAttribute('aria-expanded','false');emailChoice.focus();};
+ }
  api('/api/auth-options').then(options=>{
+  if(emailChoice)emailChoice.disabled=!options.email;
+  if(page==='login')$('button[type=submit]',$('#auth-form')).disabled=!options.email;
+  if(authStatus)authStatus.textContent=options.email?'เลือกวิธีเข้าสู่ระบบของคุณ':'ระบบอีเมลยังไม่พร้อม กรุณาลองใหม่ภายหลัง';
   if(!options.email){const form=$('#auth-form');$('button[type=submit]',form).disabled=true;formMessage(form,'ระบบสมัครด้วยอีเมลยังไม่พร้อม กรุณาลองใหม่ภายหลัง');}
   (options.providers||[]).forEach(provider=>{const button=$(`[data-social="${provider.id}"]`);if(!button)return;button.disabled=!provider.enabled;button.title=provider.enabled?'ดำเนินการต่อด้วย '+provider.name:'ร้านยังไม่ได้เชื่อมต่อ '+provider.name;$('[data-provider-state]',button).hidden=provider.enabled;});
- }).catch(()=>{formMessage($('#auth-form'),'ตรวจสอบการเชื่อมต่อไม่สำเร็จ กรุณาลองโหลดหน้าใหม่');});
+  if(authStatus&&options.email&&!(options.providers||[]).some(provider=>provider.enabled))authStatus.textContent='โซเชียลยังไม่เปิดใช้งาน กรุณาใช้อีเมล';
+ }).catch(()=>{const message='ตรวจสอบการเชื่อมต่อไม่สำเร็จ กรุณาลองโหลดหน้าใหม่';formMessage($('#auth-form'),message);if(authStatus)authStatus.textContent=message;});
  $$('[data-social]').forEach(button=>button.addEventListener('click',async()=>{if(button.disabled)return;button.disabled=true;try{const result=await api('/api/auth/sign-in/social',{provider:button.dataset.social,callbackURL:location.origin+'/auth/complete/',errorCallbackURL:location.origin+'/login/'});if(!result.ok||!result.url){formMessage($('#auth-form'),'เชื่อมต่อผู้ให้บริการไม่สำเร็จ กรุณาลองอีกครั้ง');return;}const dest=new URL(result.url);if(!['https:','http:'].includes(dest.protocol))throw new Error('Invalid redirect');location.assign(dest.href);}catch{formMessage($('#auth-form'),'เชื่อมต่อผู้ให้บริการไม่สำเร็จ กรุณาลองอีกครั้ง');}finally{button.disabled=false;}}));
  const toggle=$('[data-toggle-password]');toggle.onclick=()=>{const field=$('#auth-password'),show=field.type==='password';field.type=show?'text':'password';toggle.setAttribute('aria-label',show?'ซ่อนรหัสผ่าน':'แสดงรหัสผ่าน');toggle.setAttribute('aria-pressed',String(show));};
  if(new URLSearchParams(location.search).has('error'))formMessage($('#auth-form'),'เข้าสู่ระบบผ่านผู้ให้บริการไม่สำเร็จ ลองอีกครั้งหรือใช้อีเมล');
