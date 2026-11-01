@@ -1,3 +1,3 @@
-import Link from 'next/link';
+import Link from '@/components/store/navigation-link';
 import { ArrowUpRight, ArrowLeft } from 'lucide-react';
 export default function NotFound() { return <section className="not-found wrap"><div className="error-orbit"><span>4</span><img src="/assets/brand/mark.svg" width="140" height="140" alt="0"/><span>4</span></div><span className="eyebrow">A LITTLE OFF THE MAP</span><h1>หน้านี้อาจไปเล่นที่อื่นแล้ว<span className="blue">.</span></h1><p>ไม่พบหน้าที่คุณต้องการ ลองกลับไปเริ่มต้นใหม่<br />หรือให้ทีมดูแลช่วยหาทางไปต่อ</p><div className="button-row"><Link href="/" className="button button-dark"><ArrowLeft size={17}/>กลับหน้าแรก</Link><Link href="/support" className="text-link">ติดต่อทีมดูแล <ArrowUpRight size={17}/></Link></div></section>; }

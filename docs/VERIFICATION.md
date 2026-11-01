@@ -20,3 +20,7 @@ Browser form submission of a guest support ticket was inconclusive because the b
 The public and authenticated headers were inspected separately. A temporary UI fixture supplied a synthetic member context for browser-only catalog/menu checks; that fixture and the responsive iframe wrapper are removed before packaging. No fixture credentials or local databases are included in the release.
 
 External OAuth applications are not configured, so real Google/Discord/LINE/GitHub/Microsoft/GitLab callback flows cannot be verified yet and their buttons remain disabled. There is no connected reset-email service or automatic payment processor. Real inventory, payment instructions and public contact information must come from the owner. These states are explained in the UI instead of being represented as completed integrations.
+
+## Production navigation regression
+
+A real browser click on the Login link reproduced `TypeError: e is not a function` in Vinext's generated Link transition. Direct navigation to `/login` rendered correctly. Store links now use native document navigation through one shared TSX anchor component; the Liquid Glass shortcuts also retain their native anchor behavior. This avoids the failing transition without changing authentication, routes, or layout. Browser verification must click the published Top bar Login button, rather than checking the destination URL alone.

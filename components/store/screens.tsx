@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import Link from '@/components/store/navigation-link';
 import { useState } from 'react';
 import { useLoad } from './use-load';
 import { ArrowUpRight, ArrowRight, Search, Heart, ShoppingBag, CheckCircle2, Download, ShieldCheck, LifeBuoy, Users, Code2, Gamepad2, Package } from 'lucide-react';

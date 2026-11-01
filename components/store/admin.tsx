@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import Link from '@/components/store/navigation-link';
 import { useState } from 'react';
 import { ArrowUpRight, Package, MessageCircle, Users, Settings, ShoppingBag } from 'lucide-react';
 import { api, useStore } from './provider';

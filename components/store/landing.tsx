@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import Link from '@/components/store/navigation-link';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ArrowDown, ArrowUpRight, ChevronRight } from 'lucide-react';
 import { HeroVideo, BrandReveal } from './media';

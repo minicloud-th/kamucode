@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/store/navigation-link';
 import { ArrowUpRight, Eye, EyeOff, LockKeyhole } from 'lucide-react';
 import { safeNextPath } from '@/lib/navigation';
 import { ActionForm, Field, value } from './forms';

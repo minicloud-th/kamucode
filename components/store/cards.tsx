@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import Link from '@/components/store/navigation-link';
 import { Heart, ArrowUpRight } from 'lucide-react';
 import type { Product } from '@/lib/commerce/types';
 import { money } from '@/lib/commerce/types';
