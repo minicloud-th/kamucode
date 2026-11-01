@@ -22,7 +22,7 @@ export function getAuth(){
   return betterAuth({
     appName:'kamucode',secret,baseURL,trustedOrigins:[baseURL],basePath:'/api/auth',
     database:drizzleAdapter(getDb(),{provider:'sqlite',schema:{user:authUser,session:authSession,account:authAccount,verification:authVerification,rateLimit:authRateLimit},transaction:false}),
-    emailAndPassword:{enabled:true,minPasswordLength:10,maxPasswordLength:128,autoSignIn:true},
+    emailAndPassword:{enabled:true,disableSignUp:true,minPasswordLength:10,maxPasswordLength:128,autoSignIn:true},
     socialProviders, account:{accountLinking:{enabled:false},encryptOAuthTokens:true},
     session:{expiresIn:60*60*24*7,updateAge:60*60*24},
     rateLimit:{enabled:true,storage:'database',window:60,max:100,customRules:{'/sign-in/email':{window:60,max:8},'/sign-up/email':{window:60,max:5}}},

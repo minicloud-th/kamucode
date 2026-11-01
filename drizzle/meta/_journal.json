@@ -15,6 +15,13 @@
       "when": 1793429221339,
       "tag": "0001_superb_warlock",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793517634198,
+      "tag": "0002_gray_selene",
+      "breakpoints": true
     }
   ]
 }

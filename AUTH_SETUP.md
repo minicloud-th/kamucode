@@ -1,6 +1,6 @@
 # Enable social sign-in
 
-Email signup/login works independently. To enable a social button, the shop owner creates an OAuth application at that provider and enters its client ID and secret through the Site's runtime environment settings. The supported setting names are listed only in .env.example. Never commit secrets or paste them into page code.
+Existing email-account login works independently; new email signup is disabled. To enable a social button, the shop owner creates an OAuth application at that provider and enters its client ID and secret through the Site's runtime environment settings. The supported setting names are listed only in .env.example. Never commit secrets or paste them into page code.
 
 Use the production Site origin below. If the Site slug changes, update its runtime base URL and every provider's allowed callback.
 
@@ -30,4 +30,4 @@ The existing Site access gate remains separate. Social and email accounts do not
 
 ## Email delivery
 
-Signup currently creates an unverified email account and signs it in. To add email verification or self-service password recovery, connect a mail delivery service with a verified sending identity, implement the delivery hooks, then enable the corresponding Better Auth features. Do not claim verification or automatic reset emails until delivery is tested.
+New email signup is disabled. Existing email accounts retain their verification status. To add email verification or self-service password recovery, connect a mail delivery service with a verified sending identity, implement the delivery hooks, then enable the corresponding Better Auth features. Do not claim verification or automatic reset emails until delivery is tested.

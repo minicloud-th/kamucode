@@ -1,44 +1,74 @@
 # kamucode
 
-Thai storefront for game accounts and source code. The ribbon symbol, rounded outlined wordmark and banner are original vector assets; retrieved game imagery is credited in reference/image-credits.json. The catalogue remains illustrative: no inventory, prices, orders or payments are invented.
+A Thai, full-stack digital storefront built with React TSX, Vinext, Cloudflare Workers, D1, Drizzle and Better Auth. All application screens are App Router TSX routes. There are no authored HTML storefront pages or copied Fastwork theme files in the runtime.
 
-## Pages and behavior
+## Experience
 
-The root URL always opens the original landing at /welcome/, including its full collection, principles, partner and closing sections. Its floating top bar has exactly the original brand, language selector and one membership button. Public pages retain this small top bar. Authenticated store pages add five Liquid Glass shortcuts and a page search dialog (Ctrl/Cmd+K); mobile keeps labels visible. The public authentication experience has one Login page. Email uses existing credentials; provider sign-in completes the member record automatically and enters /shop/. Legacy /signup/ URLs redirect to /login/.
+The original kamucode symbol, blue accents, floating cards and Play / Build / Grow idea remain. The landing adds an original cinematic image/video banner, mixed game/code collections, editorial panels, partner reveal and a full footer. Motion pauses off screen and respects reduced-motion preferences. The supplied showreel is a visual reference and is not republished as kamucode work.
 
-Dedicated routes cover games, source code, each product, partners, account settings, saved items, orders, support, privacy, terms, security and the sitemap. Store, product and membership documents are bundled into the Worker and served only after checking authentication and the D1 member record. They are absent from public assets. Visitors without a session go to login; identities without membership return to login. The landing, authentication, help and legal pages remain available within the existing Site audience. The order page displays an honest empty state. Search and category filters work without replacing the whole page.
+Guests see the compact brand/help/Login header. Members get five Liquid Glass shortcuts, search and an avatar dropdown linking to account, orders, digital library, saved items and security. Admin navigation appears only for an authorized owner. The Thai language label is informational; there is no nonfunctional language switch.
 
-Members can edit their display name, save/remove products, submit a partner application, review its status, submit support requests, and export their own data. Guest support is available for account and privacy questions. Support submissions are database records; they do not trigger an email. There is no admin review dashboard yet.
+## Routes
 
-## Authentication
+| Area | TSX URLs |
+| --- | --- |
+| Landing and discovery | `/`, `/welcome`, `/collections`, `/showcase` |
+| Catalog | `/shop`, `/games`, `/source-code`, `/product/[slug]`, `/saved` |
+| Purchase | `/cart`, `/checkout`, `/orders`, `/orders/[id]`, `/downloads` |
+| Account | `/login`, `/account`, `/account/security`, `/notifications` |
+| Partner | `/partners`, `/partners/apply`, `/partners/dashboard` |
+| Help | `/support`, `/support/tickets`, `/support/tickets/[id]`, `/faq`, `/contact`, `/how-it-works` |
+| Information | `/about`, `/privacy`, `/terms`, `/security`, `/sitemap` |
+| Recovery | `/forgot-password`, `/reset-password` |
+| Administration | `/admin`, `/admin/products`, `/admin/orders`, `/admin/support`, `/admin/partners`, `/admin/settings` |
 
-Better Auth runs in the Worker against D1 with the Drizzle adapter. Email/password signup and login are implemented with password hashing, HTTP-only session cookies, server-side logout, rate limits and origin checks. Email verification and self-service password-reset mail are not configured; the UI and security page say so.
+Authentication completion routes handle native/provider returns. Legacy `.html` URLs and `/signup` redirect to their current equivalents. Unknown URLs and inaccessible order/ticket records return an actual 404. User data and store/admin pages are protected at the server boundary, including API access.
 
-Google, Discord, LINE, GitHub, Microsoft and GitLab adapters are implemented. Each button enables only when the matching client ID and client secret exist. No social provider is configured in production yet. See AUTH_SETUP.md. Framework use does not require a paid authentication subscription; external provider policies and quotas still apply.
+## Working workflows
 
-The existing dispatch-owned ChatGPT identity and Site audience remain intact. Application accounts do not override the Site's outer access gate. Changing the Site audience requires a separate explicit request.
+- ChatGPT sign-in and existing email-account login automatically complete the member record. Email signup is disabled at the server. There is no Signup UI.
+- Profile name and private avatar uploads, saved products, database-backed cart, notifications and personal JSON export.
+- Product management, encrypted digital inventory, server-priced one-item orders, atomic stock reservations, cancellation/stock release, manual payment review and private delivery after confirmation.
+- Member/guest support inbox, persisted admin responses, user ticket history, partner submissions, admin approval/rejection and member notifications.
+- Server-only admin allowlists (`ADMIN_USER_IDS`, or verified `ADMIN_EMAILS`). No client role field grants access.
 
-## Source and validation
+Default catalog entries are clearly marked examples. They cannot be purchased. No prices, stock, orders, reviews or sales are fabricated. An owner must create a real product, set its price, add stock they are authorized to sell, turn off its demo flag, publish it and set payment instructions before checkout accepts orders. One stock item is reserved per order until paid or cancelled. Pending reservations do not expire automatically; admins can cancel stale orders after checking for payment.
 
-- public/site.css and public/site.js: member pages, forms and shared interactions.
-- public/landing.css, public/landing.js and public/topbar.js: restored landing, original motion and compact top bar.
-- generated/store-pages/ and app/[...store]/route.ts: member documents and server access checks.
-- scripts/build-site-pages.py: reproducible HTML and brand assets.
-- reference/landing-original.html: the complete accepted landing from version 2, retained as the rebuild reference.
-- app/, lib/, db/, drizzle/: authenticated APIs, identity, schema and additive migrations.
-- .env.example: names of supported runtime settings; real secrets belong in Sites environment settings.
+Payment review is manual. This project does not charge a card, verify a bank transfer, or send automatic email. A confirmed payment opens the reserved delivery to its buyer; this operation must follow a real bank/provider check. Partner approval records an application outcome and does not grant catalog-admin access or create a seller payout system.
 
-Use the managed Sites preview/build workflow. Checks:
+## Runtime configuration
 
-    node --check public/site.js
-    python3 scripts/check-kamucode.py
-    npx tsc --noEmit
-    node scripts/test-member-flow.mjs
+Secrets live in Sites runtime settings, never Git. See `.env.example` and `AUTH_SETUP.md` for names. Preserve `BETTER_AUTH_SECRET`: it signs sessions and derives the inventory encryption key. Rotating it requires an explicit encrypted-inventory migration and session plan.
 
-The integration check runs the built Worker with a disposable in-memory database. It covers native and email signup, login/logout, password hashing, session-cookie attributes, provider availability, forms, exports, saved items, cross-origin rejection, account isolation, guest/member route access, public top-bar shape, authenticated shortcuts, and complete landing sections. Test users are never sent to production.
+The Site owner's verified identity is configured separately as an admin. Provider buttons stay disabled until their OAuth client credentials are supplied and tested. Email accounts can sign in, but self-service reset/verification mail is not connected; recovery pages direct users to provider recovery or the support process without claiming an email was sent.
 
-## Brand assets
+## Code map
 
-The shared identity uses a curved split symbol and custom round letterforms with a blue-to-cyan gradient. All lettering is stored as vector paths. Light, dark and single-color variants are in public/assets/brand/. The landing and original top-bar structure are preserved; member shortcuts still require sign-in.
+- `app/`: explicit TSX pages, route metadata, 404/error UI and API adapters.
+- `components/store/`: React UI, forms, banner media, catalog and store/admin screens.
+- `components/ui/liquid-glass-navbar.tsx`, `liquid-glass-logo-reveal.tsx`: supplied glass components adapted for kamucode, reduced motion and visibility cleanup.
+- `lib/store-page.tsx`: shared server guards and route rendering.
+- `lib/commerce/`: D1 workflows, catalog, encryption, role checks and session projections.
+- `db/schema.ts`, `drizzle/`: additive schema and migration metadata; production schema is applied by Sites before the Worker is uploaded.
+- `worker/index.ts`: security headers and nonce-based script CSP.
+- `public/assets/brand/`, `public/assets/catalog/`, `public/assets/code/`, `public/media/`: brand assets, original illustrations, image and silent motion banner.
 
-To rebuild the identity and pages, run python3 scripts/build-site-pages.py, then node scripts/export-brand.mjs to rasterize transparent PNGs and rebuild the downloadable brand kit. The exported kit contains only logo assets, with no game artwork or account data.
+## Validate
+
+Use the managed Sites preview/build workflow, or the provided npm scripts for standalone work:
+
+```sh
+npx tsc --noEmit
+npm run build
+npm test
+```
+
+The integration suite exercises the built production Worker and a disposable D1 database. It checks public/member/admin SSR routes, real 404s, CSP nonces, same-origin writes, actual byte limits, cookie/identity isolation, disabled signup, existing email login/logout, concurrent last-item reservations, price tampering, encrypted delivery, paid/cancelled state transitions, ownership, support limits/replies, partner review and notifications. It never creates production test accounts or sends money/email.
+
+Local D1 migrations run separately from requests. After a build creates the Wrangler config, apply only pending SQL files in order:
+
+```sh
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0002_gray_selene.sql
+```
+
+A fresh local DB also needs `0000` and `0001` first. Do not replay applied migrations. Do not commit local SQLite files, environment values, generated builds or temporary QA routes.

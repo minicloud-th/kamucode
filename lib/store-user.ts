@@ -1,18 +1,31 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getChatGPTUser } from '@/app/chatgpt-auth';
-import { authConfigured,getAuth } from './auth';
-
-export type StoreUser={userId:string,email:string,displayName:string,fullName:string|null,method:'email-or-social'|'chatgpt',emailVerified:boolean};
-export async function getStoreUser():Promise<StoreUser|null>{
-  const requestHeaders=await headers();
-  if(authConfigured()&&requestHeaders.get('cookie')?.includes('kamucode')){
-    const session=await getAuth().api.getSession({headers:requestHeaders});
-    if(session)return {userId:'auth:'+session.user.id,email:session.user.email,displayName:session.user.name,fullName:session.user.name,method:'email-or-social',emailVerified:session.user.emailVerified};
-    return null;
-  }
-  if(requestHeaders.get('cookie')?.includes('kc_signed_out=1'))return null;
-  const native=await getChatGPTUser();
-  return native?{...native,method:'chatgpt',emailVerified:true}:null;
+import { authConfigured, getAuth } from './auth';
+export type StoreUser = {
+    userId: string;
+    email: string;
+    displayName: string;
+    fullName: string | null;
+    method: 'email-or-social' | 'chatgpt';
+    emailVerified: boolean;
+};
+export function cookiesOf(value:string|null):Map<string,string>{
+ const out=new Map<string,string>();
+ for(const piece of (value||'').split(';')){const at=piece.indexOf('=');if(at<1)continue;out.set(piece.slice(0,at).trim(),piece.slice(at+1).trim());}
+ return out;
 }
-export async function requireStoreUser(returnTo='/home'):Promise<StoreUser>{const user=await getStoreUser();if(user)return user;redirect('/login/?next='+encodeURIComponent(returnTo));}
+export function hasAuthCookie(value: string | null) { return [...cookiesOf(value).keys()].some(k => k === 'kamucode.session_token' || k === '__Secure-kamucode.session_token'); }
+export async function getStoreUser(): Promise<StoreUser | null> {
+    const h = await headers();
+    if (authConfigured() && hasAuthCookie(h.get('cookie'))) {
+        const s = await getAuth().api.getSession({ headers: h });
+        return s ? { userId: 'auth:' + s.user.id, email: s.user.email, displayName: s.user.name, fullName: s.user.name, method: 'email-or-social', emailVerified: s.user.emailVerified } : null;
+    }
+    if (cookiesOf(h.get('cookie')).get('kc_signed_out') === '1')
+        return null;
+    const n = await getChatGPTUser();
+    return n ? { ...n, method: 'chatgpt', emailVerified: true } : null;
+}
+export async function requireStoreUser(returnTo = '/shop') { const u = await getStoreUser(); if (u)
+    return u; redirect('/login?next=' + encodeURIComponent(returnTo)); }

@@ -1,0 +1,107 @@
+import type { Product } from "./types";
+export const defaultCatalog: Product[] = [
+    {
+        "id": "valorant",
+        "name": "VALORANT",
+        "kind": "game",
+        "tag": "FPS · PC",
+        "image": "/assets/catalog/valorant.svg",
+        "description": "รวมคอลเลกชันไอดีสำหรับสาย Tactical FPS ดูรายละเอียดเซิร์ฟเวอร์ สกิน และเงื่อนไขของแต่ละรายการก่อนตัดสินใจ",
+        "priceCents": 0,
+        "demo": true,
+        "published": true,
+        "stock": 0,
+        "createdAt": 0
+    },
+    {
+        "id": "roblox",
+        "name": "Roblox",
+        "kind": "game",
+        "tag": "Adventure · Multi-platform",
+        "image": "/assets/catalog/roblox.svg",
+        "description": "โลกของเกมและประสบการณ์ที่เลือกได้ตามสไตล์คุณ รายละเอียดเกมและไอเทมจะระบุแยกในแต่ละรายการ",
+        "priceCents": 0,
+        "demo": true,
+        "published": true,
+        "stock": 0,
+        "createdAt": 0
+    },
+    {
+        "id": "minecraft",
+        "name": "Minecraft",
+        "kind": "game",
+        "tag": "Sandbox · PC",
+        "image": "/assets/catalog/minecraft.svg",
+        "description": "เริ่มโลกใบใหม่ในแบบของคุณ ตรวจสอบ Edition แพลตฟอร์ม และข้อมูลบัญชีจากรายการสินค้าก่อนสั่งซื้อ",
+        "priceCents": 0,
+        "demo": true,
+        "published": true,
+        "stock": 0,
+        "createdAt": 0
+    },
+    {
+        "id": "genshin",
+        "name": "Genshin Impact",
+        "kind": "game",
+        "tag": "RPG · Multi-platform",
+        "image": "/assets/catalog/genshin.svg",
+        "description": "เลือกการผจญภัยที่เข้ากับคุณ พร้อมพื้นที่แสดงข้อมูลเซิร์ฟเวอร์ ตัวละคร และรายละเอียดของแต่ละบัญชี",
+        "priceCents": 0,
+        "demo": true,
+        "published": true,
+        "stock": 0,
+        "createdAt": 0
+    },
+    {
+        "id": "storefront",
+        "name": "Storefront Kit",
+        "kind": "source",
+        "tag": "React · TypeScript",
+        "image": "/assets/catalog/storefront.svg",
+        "description": "แนวทางซอร์สโค้ดหน้าร้านดิจิทัล พร้อมพื้นที่สำหรับแสดงสินค้าและหมวดหมู่ เหมาะสำหรับนำไปพัฒนาแบรนด์ของตัวเอง",
+        "priceCents": 0,
+        "demo": true,
+        "published": true,
+        "stock": 0,
+        "createdAt": 0
+    },
+    {
+        "id": "dashboard",
+        "name": "Dashboard UI",
+        "kind": "source",
+        "tag": "Next.js · Tailwind",
+        "image": "/assets/catalog/dashboard.svg",
+        "description": "แนวทาง UI แดชบอร์ดสำหรับต่อยอดระบบหลังบ้าน ตรวจสอบฟีเจอร์ เอกสาร และขอบเขตสิทธิ์ของแต่ละชุดก่อนใช้งาน",
+        "priceCents": 0,
+        "demo": true,
+        "published": true,
+        "stock": 0,
+        "createdAt": 0
+    },
+    {
+        "id": "discord-bot",
+        "name": "Community Bot",
+        "kind": "source",
+        "tag": "Node.js · Discord",
+        "image": "/assets/catalog/discord-bot.svg",
+        "description": "แนวทางโค้ดสำหรับเครื่องมือชุมชนและระบบอัตโนมัติ รายละเอียดคำสั่งและข้อกำหนดจะระบุพร้อมสินค้าจริง",
+        "priceCents": 0,
+        "demo": true,
+        "published": true,
+        "stock": 0,
+        "createdAt": 0
+    },
+    {
+        "id": "saas-starter",
+        "name": "SaaS Starter",
+        "kind": "source",
+        "tag": "TypeScript · Full stack",
+        "image": "/assets/catalog/saas-starter.svg",
+        "description": "แนวทางโปรเจกต์เริ่มต้นสำหรับพัฒนาเว็บแอปของคุณ ตรวจสอบเทคโนโลยีที่ใช้และรูปแบบไลเซนส์ก่อนนำไปต่อยอด",
+        "priceCents": 0,
+        "demo": true,
+        "published": true,
+        "stock": 0,
+        "createdAt": 0
+    }
+];

@@ -1,5 +1,4 @@
-import { redirect } from 'next/navigation';
+import { Landing } from '@/components/store/landing';
+export default function Home() { return <Landing />; }
+
 export const dynamic = 'force-dynamic';
-export default async function Page() {
-  redirect('/welcome/');
-}
