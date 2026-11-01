@@ -51,7 +51,7 @@ function renderPartner(){
 // Native dialog supplies focus management and Escape support on small screens.
 const menu=$('#km-menu'),menuButton=$('.km-menu-button');
 if(menu&&menuButton){menuButton.onclick=()=>{menu.showModal();menuButton.setAttribute('aria-expanded','true');};$('[data-close-menu]',menu).onclick=()=>menu.close();menu.addEventListener('close',()=>{menuButton.setAttribute('aria-expanded','false');menuButton.focus({preventScroll:true});});menu.addEventListener('click',event=>{if(event.target===menu&&event.clientX<menu.getBoundingClientRect().left)menu.close();});}
-$$('[data-go-signup]').forEach(button=>{button.removeAttribute('aria-hidden');button.removeAttribute('tabindex');button.onclick=()=>location.assign('/signup/');});
+$$('[data-go-login]').forEach(button=>{button.removeAttribute('aria-hidden');button.removeAttribute('tabindex');button.onclick=()=>location.assign('/login/');});
 $$('.orbit-card[data-product]').forEach(card=>{card.setAttribute('role','link');card.setAttribute('tabindex','0');card.setAttribute('aria-label','ดูรายละเอียด '+(card.dataset.product||''));card.onclick=()=>location.assign('/product/'+encodeURIComponent(card.dataset.product)+'/');card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click();}};});
 // A single reveal per section, followed by ordinary scrolling.
 if(!reduced&&'IntersectionObserver'in window){document.body.classList.add('km-motion-ready');const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-visible');observer.unobserve(e.target);}});},{threshold:.07});$$('.km-catalog,.km-partner-strip,.km-source-feature,.km-banner').forEach((n,i)=>{n.dataset.reveal='';n.style.setProperty('--km-delay',Math.min(i,2)*45+'ms');observer.observe(n);});}
@@ -76,10 +76,10 @@ function busy(form,state){const button=$('button[type=submit]',form);button.disa
 function bindForm(id,handler){const form=$(id);if(!form)return;form.addEventListener('submit',async event=>{event.preventDefault();if(!form.reportValidity())return;busy(form,true);formMessage(form,'');try{await handler(form);}catch{formMessage(form,'เชื่อมต่อไม่สำเร็จ กรุณาลองอีกครั้ง');}finally{busy(form,false);}});}
 async function finishRegistration(name){let me=await api('/api/me');if(!me.authenticated)throw new Error('No session');if(!me.registered){const result=await api('/api/register',{displayName:((name||me.displayName||'').trim().length>=2?(name||me.displayName).trim().slice(0,60):'สมาชิก kamucode'),partnerInterest:new URLSearchParams(location.search).has('partner')});if(!result.ok)throw new Error('Registration failed');}location.replace('/shop/');}
 bindForm('#auth-form',async form=>{
- const signup=form.dataset.mode==='signup',body={email:$('#auth-email').value.trim(),password:$('#auth-password').value};if(signup)body.name=$('#auth-name').value.trim();
- const result=await api('/api/auth/'+(signup?'sign-up/email':'sign-in/email'),body);
- if(!result.ok){const message=result.status===429?'ลองหลายครั้งเกินไป กรุณารอสักครู่':signup?(result.code==='USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL'?'อีเมลนี้มีบัญชีแล้ว กรุณาเข้าสู่ระบบ':'สร้างบัญชีไม่สำเร็จ ตรวจสอบอีเมลและรหัสผ่าน หรือลองเข้าสู่ระบบหากเคยสมัครแล้ว'):'อีเมลหรือรหัสผ่านไม่ถูกต้อง';formMessage(form,message);return;}
- formMessage(form,'กำลังพาเข้าหน้าหลัก…',true);await finishRegistration(signup?body.name:undefined);
+ const body={email:$('#auth-email').value.trim(),password:$('#auth-password').value};
+ const result=await api('/api/auth/sign-in/email',body);
+ if(!result.ok){formMessage(form,result.status===429?'ลองหลายครั้งเกินไป กรุณารอสักครู่':'อีเมลหรือรหัสผ่านไม่ถูกต้อง');return;}
+ formMessage(form,'กำลังพาเข้าหน้าหลัก…',true);await finishRegistration();
 });
 if($('#auth-form')){
  const emailChoice=$('[data-auth-email]'),emailPanel=$('#km-email-panel'),authChoices=$('[data-auth-choices]'),authBack=$('[data-auth-back]'),authStatus=$('[data-auth-service-status]');
@@ -91,8 +91,8 @@ if($('#auth-form')){
  api('/api/auth-options').then(options=>{
   if(emailChoice)emailChoice.disabled=!options.email;
   if(page==='login')$('button[type=submit]',$('#auth-form')).disabled=!options.email;
-  if(authStatus)authStatus.textContent=options.email?'เลือกวิธีเข้าสู่ระบบของคุณ':'ระบบอีเมลยังไม่พร้อม กรุณาลองใหม่ภายหลัง';
-  if(!options.email){const form=$('#auth-form');$('button[type=submit]',form).disabled=true;formMessage(form,'ระบบสมัครด้วยอีเมลยังไม่พร้อม กรุณาลองใหม่ภายหลัง');}
+  if(authStatus)authStatus.textContent=options.email?'เลือกวิธีเข้าสู่ระบบ kamucode':'ระบบอีเมลยังไม่พร้อม กรุณาลองใหม่ภายหลัง';
+  if(!options.email){const form=$('#auth-form');$('button[type=submit]',form).disabled=true;formMessage(form,'ระบบเข้าสู่ระบบด้วยอีเมลยังไม่พร้อม กรุณาลองใหม่ภายหลัง');}
   (options.providers||[]).forEach(provider=>{const button=$(`[data-social="${provider.id}"]`);if(!button)return;button.disabled=!provider.enabled;button.title=provider.enabled?'ดำเนินการต่อด้วย '+provider.name:'ร้านยังไม่ได้เชื่อมต่อ '+provider.name;$('[data-provider-state]',button).hidden=provider.enabled;});
   if(authStatus&&options.email&&!(options.providers||[]).some(provider=>provider.enabled))authStatus.textContent='โซเชียลยังไม่เปิดใช้งาน กรุณาใช้อีเมล';
  }).catch(()=>{const message='ตรวจสอบการเชื่อมต่อไม่สำเร็จ กรุณาลองโหลดหน้าใหม่';formMessage($('#auth-form'),message);if(authStatus)authStatus.textContent=message;});

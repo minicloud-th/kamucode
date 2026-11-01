@@ -14,6 +14,8 @@ for filename in routes:
  file=public/filename
  if not file.exists():file=private/filename
  doc=html.fromstring(file.read_bytes());base='/'+filename
+ assert not doc.xpath('//a[starts-with(@href,"/signup")]'),filename+' must use Login as its only account entry'
+ assert not doc.xpath('//form[@data-mode="signup"]'),filename+' must not expose a signup form'
  assert len(doc.xpath('//h1'))==1,filename+' must have one main heading'
  assert not any(term in doc.text_content().lower() for term in ['fastwork','chapavich','changesea']),filename
  assert not any(term in doc.text_content() for term in ['à¸','à¹','Â·']),filename+' text encoding'
@@ -51,6 +53,7 @@ assert len(catalog)==8
 for product in catalog:check(product['image']);check('/product/'+product['id']+'/')
 assert not missing,str(sorted(missing))
 assert not list(public.glob('__*')),'Remove temporary QA files'
+assert not (public/'signup/index.html').exists(),'The old signup page must be removed'
 manifest=json.loads((root/'.openai/hosting.json').read_text())
 assert manifest['project_id']=='appgprj_6ae5650ea7ac8191a6aa705edd60f431' and manifest['d1']=='DB'
 print(f'Passed: {len(routes)} pages, unique headings and IDs, internal links, form labels, images, policy pages, and preserved Site identity.')

@@ -7,5 +7,5 @@ export const dynamic = 'force-dynamic';
 export default async function Home() {
   const user = await requireStoreUser('/home');
   const member = await getDb().select().from(members).where(eq(members.userId,user.userId)).get();
-  redirect(member ? '/shop/' : '/signup/');
+  redirect(member ? '/shop/' : '/login/');
 }

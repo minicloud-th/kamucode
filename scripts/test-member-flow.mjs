@@ -22,7 +22,10 @@ try{
  const canonical=await request('/shop/');assert.equal(canonical.status,308);assert.equal(new URL(canonical.headers.get('location'),'https://integration.invalid').pathname,'/shop');
  const storePaths=['/shop','/games','/source-code','/partners','/account','/saved','/orders','/product/valorant','/shop/index.html'];
  for(const path of storePaths){const guest=await request(path);assert.equal(guest.status,302,path+' must require sign-in');assert.match(guest.headers.get('location'),/\/login\/\?next=/);}
- assert.equal((await request('/shop',undefined,'bob')).headers.get('location'),'https://integration.invalid/signup/');
+ assert.equal((await request('/shop',undefined,'bob')).headers.get('location'),'https://integration.invalid/login/');
+ for(const path of ['/signup','/signup/index.html']){
+  const legacy=await request(path);assert.equal(legacy.status,302);assert.equal(legacy.headers.get('location'),'https://integration.invalid/login/');
+ }
  assert.equal((await request('/api/register',{displayName:'Anonymous'})).status,401);
  assert.equal((await request('/api/register',{displayName:'A'},'alice')).status,400);
  assert.equal((await request('/api/profile',{displayName:'Not registered'},'bob')).status,403,'Unregistered identities must not receive a successful profile update');
