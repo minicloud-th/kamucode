@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /api/
+Disallow: /shop/
+Disallow: /games/
+Disallow: /source-code/
+Disallow: /partners/
+Disallow: /product/
+Disallow: /account/
+Disallow: /saved/
+Disallow: /orders/
+Disallow: /auth/
+Disallow: /signup/
+Disallow: /login/
+Sitemap: https://kamucode.kawertyff-2.chatgpt.site/sitemap.xml

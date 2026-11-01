@@ -1,0 +1,18 @@
+/* One identity, fitted into the existing landing and top bar. */
+.kc-brand>.kc-lockup{width:188px!important;height:auto!important;max-width:none;display:block}
+.kc-brand>.kc-lockup-dark{display:none}
+.start-selling-top-nav.is-on-dark .kc-lockup-light{display:none}
+.start-selling-top-nav.is-on-dark .kc-lockup-dark{display:block}
+.kc-closing .kc-brand>.kc-lockup{width:270px!important}
+.kc-partner-ticket .kc-ticket-wordmark{display:block;width:210px;height:auto;max-width:100%}
+.hero .script-accent.clone-word{height:1.15em!important;min-width:0}
+.hero .clone-word>.kc-wordmark-image{display:block;width:5.05em;height:auto;max-width:none}
+.hero .avatar img{object-fit:contain!important;padding:5px}
+.km-brand{gap:0}
+.km-brand>.km-lockup{display:block;width:188px;height:auto;max-width:none}
+.km-auth-top .km-brand>.km-lockup{width:174px}
+.km-footer .km-brand>.km-lockup,.km-public-footer .km-brand>.km-lockup{width:174px}
+.km-auth-mark>.km-symbol,.km-partner-monogram>.km-symbol{display:block;width:100%;height:100%;object-fit:contain}
+@media(max-width:860px){.kc-brand>.kc-lockup{width:165px!important}}
+@media(max-width:600px){.kc-brand>.kc-lockup{width:145px!important}.kc-closing .kc-brand>.kc-lockup{width:235px!important}.km-auth-top .km-brand>.km-lockup{width:148px}.kc-partner-ticket .kc-ticket-wordmark{width:196px}}
+@media(max-width:370px){.kc-brand>.kc-lockup{width:128px!important}}
