@@ -55,7 +55,7 @@ The hero links eight existing products on desktop and displays six on mobile. A 
 
 Responsive iframe checks at 1365×631, 390×844 and 320×631 show no horizontal overflow and keep the central copy separate from the collection images. The short desktop layout lowers the first row below the retained header. The header starts in its light style and still detects lower dark sections. The original film, gallery filters, partner banner, closing wordmark and native account navigation remain in place. Temporary viewport QA files are removed before packaging.
 
-## Asymmetric presentation revision
+## Previous release: asymmetric presentation revision
 
 The supplied Superpower image and sampled frames from the supplied Fastwork recording guide this revision. Ten images now combine portrait, square and landscape formats at different sizes. The central three-line headline uses the existing typeface at a lighter weight, with compact text actions. The original logo, top bar, account pages and lower landing sections are retained.
 
@@ -64,3 +64,11 @@ Browser layout checks covered 1365×631, 800×631, 390×844 and 320×631 frames.
 Replay activates the actual emblem and perspective-entry animations. Pausing during the introduction reveals the copy at full opacity and pauses image floating. Pointer motion changes image offsets at different depths. At scroll progress 0.25, the first image travels by -49px/-38.75px and copy opacity becomes 0.55; scrolling remains native. Reduced-motion handling is implemented in CSS and the effects, but browser preference emulation was unavailable.
 
 The film tile starts scrolling toward the existing video section. Its final playback/pause check could not finish: browser automatic approval review denied page observation because the usage quota was exhausted. No successful playback result is claimed for this revision. The final code change replaces an image wrapper with a block-level span to keep the film button's markup valid; it does not change the measured dimensions. Temporary responsive QA pages are removed before the release build. TypeScript, the production build and the disposable Worker/D1 integration suite validate the final source before publication.
+
+## Height-scaled reference composition
+
+This revision rebuilds the hero layout around the supplied reference positions. The stage uses the full hero height, images scale primarily with that height, and the four upper images have an explicit header-clearance floor. Flat image rotations replace the earlier perspective treatment. A compact three-line headline and single supporting sentence keep the center open. Mobile retains ten images with its own positions and width-based sizes.
+
+The emblem appears first and images enter from the outer edges with staggered timing, rather than spreading from the center. Pointer movement, floating and scroll travel are smaller. The copy's scroll opacity has a 0.4 floor. Existing skip/replay/pause controls, reduced-motion handling, account links and the film-section action remain.
+
+This final layout has not been rechecked in the browser. The previous browser observation was denied by automatic approval review because the usage quota was exhausted; no alternate browser surface or automation was used to bypass that denial. Prior viewport measurements above describe earlier releases, not this layout. Release checks use TypeScript, the production build and the disposable Worker/D1 integration suite. Video playback remains outside this revision's verified results.

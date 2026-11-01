@@ -15,18 +15,18 @@ type HeroProps = {
     onFilm: () => void;
 };
 
-type OrbitSlot = {id: string; x: number; y: number; size: number; ratio: number; angle: number; tilt: number};
+type OrbitSlot = {id: string; x: number; y: number; size: number; ratio: number; angle: number};
 const orbit: OrbitSlot[] = [
-    {id: 'valorant', x: 22, y: 19, size: 16, ratio: 1.06, angle: 13, tilt: -16},
-    {id: 'storefront', x: 38.5, y: 22.5, size: 6.4, ratio: .76, angle: 5, tilt: -11},
-    {id: 'minecraft', x: 51, y: 13, size: 9.7, ratio: .8, angle: -4, tilt: 13},
-    {id: 'dashboard', x: 80.5, y: 20, size: 19, ratio: 1.3, angle: -14, tilt: -19},
-    {id: 'roblox', x: 15.5, y: 48, size: 8.6, ratio: .78, angle: 2, tilt: 16},
-    {id: 'genshin', x: 86, y: 48, size: 8.3, ratio: .72, angle: -4, tilt: -14},
-    {id: 'discord-bot', x: 23, y: 79, size: 14.3, ratio: .92, angle: -13, tilt: 16},
-    {id: 'saas-starter', x: 50.5, y: 88, size: 12.2, ratio: 1, angle: 2, tilt: -8},
-    {id: 'space', x: 65.5, y: 73, size: 5.8, ratio: .69, angle: 8, tilt: -10},
-    {id: 'film', x: 80, y: 82, size: 13.4, ratio: .86, angle: 12, tilt: -17},
+    {id: 'valorant', x: 22.3, y: 22, size: 21.7, ratio: 1.06, angle: 12},
+    {id: 'storefront', x: 38.3, y: 28.2, size: 7.8, ratio: .76, angle: 4},
+    {id: 'minecraft', x: 50.5, y: 15.5, size: 11.8, ratio: .78, angle: -3},
+    {id: 'dashboard', x: 79.3, y: 21, size: 25.5, ratio: 1.3, angle: -14},
+    {id: 'roblox', x: 14.5, y: 52.5, size: 9, ratio: .78, angle: 1},
+    {id: 'genshin', x: 86.5, y: 53, size: 9, ratio: .72, angle: -3},
+    {id: 'discord-bot', x: 23, y: 79, size: 18.5, ratio: .92, angle: -13},
+    {id: 'saas-starter', x: 50.5, y: 84, size: 13.8, ratio: 1, angle: 1},
+    {id: 'space', x: 65.3, y: 72.5, size: 6.8, ratio: .69, angle: 5},
+    {id: 'film', x: 78.5, y: 80, size: 14.2, ratio: .86, angle: 12},
 ];
 
 const imageFor = (p: Product) => p.kind === 'game' && ['valorant', 'roblox', 'minecraft', 'genshin'].includes(p.id)
@@ -47,7 +47,7 @@ export function ImmersiveHero({products, authenticated, paused, reduced, onToggl
 
     useEffect(() => {
         if (stage !== 'playing') return;
-        const timer = setTimeout(() => setStage('done'), still ? 0 : 2200);
+        const timer = setTimeout(() => setStage('done'), still ? 0 : 2050);
         return () => clearTimeout(timer);
     }, [stage, still, replay]);
 
@@ -59,8 +59,8 @@ export function ImmersiveHero({products, authenticated, paused, reduced, onToggl
             frame = 0;
             if (!visible || document.hidden) return;
             const rect = node.getBoundingClientRect();
-            node.style.setProperty('--orbit-x', x * 18 + 'px');
-            node.style.setProperty('--orbit-y', y * 12 + 'px');
+            node.style.setProperty('--orbit-x', x * 6 + 'px');
+            node.style.setProperty('--orbit-y', y * 4 + 'px');
             node.style.setProperty('--scene-progress', String(Math.max(0, Math.min(1, -rect.top / rect.height))));
         };
         const queue = () => {if (!frame && visible && !document.hidden) frame = requestAnimationFrame(render);};
@@ -109,7 +109,7 @@ export function ImmersiveHero({products, authenticated, paused, reduced, onToggl
                     const name = product?.name || (slot.id === 'film' ? 'Play. Build. Grow.' : authenticated ? 'บัญชีของคุณ' : 'สมัครสมาชิก');
                     const image = product ? imageFor(product) : slot.id === 'film' ? '/media/hero.webp' : '/media/hero-avatar-kc-v2.webp';
                     const content = <><span className={'orbit-image is-' + (product?.kind || slot.id)}><img src={image} width="480" height="600" alt="" decoding="async" draggable={false}/>{slot.id === 'film' && <span className="orbit-film-play"><Play size={14} fill="currentColor"/></span>}</span><span className="orbit-caption">{name}</span>{product?.demo && <span className="sr-only">คอลเลกชันตัวอย่าง</span>}</>;
-                    return <li className={'orbit-tile orbit-tile-' + slot.id} key={slot.id} style={{'--x': slot.x, '--y': slot.y, '--size': slot.size, '--ratio': slot.ratio, '--angle': slot.angle + 'deg', '--tilt': slot.tilt + 'deg', '--order': index, '--depth': .4 + slot.size / 12, '--scatter-x': (slot.x - 50) * 7 + 'px', '--scatter-y': (slot.y - 50) * 5 + 'px'} as CSSProperties}>
+                    return <li className={'orbit-tile orbit-tile-' + slot.id + (index < 4 ? ' is-upper' : '')} key={slot.id} style={{'--x': slot.x, '--y': slot.y, '--size': slot.size, '--ratio': slot.ratio, '--angle': slot.angle + 'deg', '--order': index, '--depth': .4 + slot.size / 12, '--entry-x': (slot.x < 50 ? -1 : 1) * (20 + slot.size) + 'cqw', '--entry-y': (slot.y < 50 ? -1 : 1) * (6 + slot.size * .6) + 'cqh', '--scatter-x': (slot.x - 50) * 3 + 'px', '--scatter-y': (slot.y - 50) * 2 + 'px'} as CSSProperties}>
                         <div className="orbit-travel"><div className="orbit-entry" key={replay}><div className="orbit-drift">
                             {slot.id === 'film' ? <button type="button" className="orbit-product" onClick={onFilm} aria-label="ดูวิดีโอแนะนำ kamucode">{content}</button> : <Link href={product ? '/product/' + product.id : authenticated ? '/account' : '/signup'} className="orbit-product" aria-label={product ? 'ดูรายละเอียด ' + product.name : authenticated ? 'เปิดบัญชีของคุณ' : 'สมัครสมาชิก'}>{content}</Link>}
                         </div></div></div>
@@ -118,7 +118,7 @@ export function ImmersiveHero({products, authenticated, paused, reduced, onToggl
             </ul>
             <div className="orbit-copy" key={'copy-' + replay}><div className="orbit-copy-content">
                 <h1 id="studio-heading">เล่นให้สุด<span>สร้างให้ไกล</span><span>ในแบบของคุณ<span className="orbit-period">.</span></span></h1>
-                <p>เกมที่อยากเล่น โค้ดที่อยากสร้าง<br/>และพื้นที่ให้ไอเดียของคุณเติบโตไปด้วยกัน</p>
+                <p>พื้นที่เดียวสำหรับเกม ซอร์สโค้ด และไอเดียของคุณ</p>
                 <div className="orbit-actions"><button type="button" onClick={onExplore}>สำรวจคอลเลกชัน <ArrowUpRight size={13}/></button><span aria-hidden="true">/</span><Link href={authenticated ? '/shop' : '/login'}>{authenticated ? 'เข้าสู่ร้านค้า' : 'เข้าสู่ระบบ'} <ArrowUpRight size={13}/></Link></div>
             </div></div>
         </div>
