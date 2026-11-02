@@ -73,7 +73,7 @@ The emblem appears first and images enter from the outer edges with staggered ti
 
 This final layout has not been rechecked in the browser. The previous browser observation was denied by automatic approval review because the usage quota was exhausted; no alternate browser surface or automation was used to bypass that denial. Prior viewport measurements above describe earlier releases, not this layout. Release checks use TypeScript, the production build and the disposable Worker/D1 integration suite. Video playback remains outside this revision's verified results.
 
-## Motion orbital gallery integration
+## Previous release: Motion orbital gallery integration
 
 The supplied React component is integrated at `components/ui/orbital-gallery-hero.tsx`, with a standalone `demo.tsx` and scoped CSS. Existing shadcn aliases, Tailwind v4 and TypeScript are reused. Motion 14.9.0 is installed and locked; no additional context provider is needed. The earlier custom immersive hero and its layout CSS import are removed.
 
@@ -82,3 +82,11 @@ A shared motion value drives a 35-second clockwise orbit. Each image's position 
 All five local Unsplash WebP files were decoded with Sharp and verified as 640×420 images; their combined source size is 193,092 bytes. The same five files are reused for ten orbit positions. No external image host or additional CSP allowance is required. TypeScript passed after component integration. Final release validation uses the production build and disposable Worker/D1 suite.
 
 Browser animation, responsive layout and playback controls have not been reverified for this revision. Earlier browser automatic approval review denied page observation because of the usage quota; no alternate browser automation was used to bypass that denial. Previous browser screenshots and viewport measurements are not evidence for this new Motion component.
+
+## Ribbon Star logo and brand introduction
+
+The user's rounded-wave and glass-star images guide a new native SVG symbol. `lib/brand-symbol.mjs` provides the shared paths and gradients for static assets and the React introduction. The six runtime SVG variants, six matching transparent PNGs, favicon, identity board and downloadable brand kit use the same symbol. Existing wordmark suffixes were compared against the prior source in four composite SVGs, while the two standalone wordmark SVGs and two wordmark PNGs remain byte-identical.
+
+The introduction assembles the ribbon surfaces and highlights, reveals the existing wordmark, then starts the 35-second gallery. Its timer is 1.85 seconds, with cleanup on unmount. Skip ends it immediately. Replay resets gallery phase and repeats it. Pausing during the introduction or switching to reduced motion reveals the page immediately and ends the introduction. The server-rendered initial state is visible, and the decorative overlay does not intercept input or lock scrolling. The favicon URL has a revision query so browser tabs can request the new artwork.
+
+TypeScript passed after integration. Native SVG rasterization checks the logo appearance; release checks validate SVG references, retained lettering, PNG dimensions, kit contents, the production build and the Worker/D1 integration suite. Browser timing, replay/skip interactions and reduced-motion behavior have not been observed for this revision because the earlier browser approval review was quota-blocked. The static logo render is evidence for the artwork only, not a browser screenshot or proof of animation playback.

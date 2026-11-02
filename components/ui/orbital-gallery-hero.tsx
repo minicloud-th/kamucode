@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import {animate, motion, useInView, useMotionValue, useReducedMotion, useTransform, type MotionValue} from "motion/react";
-import {ArrowUpRight, Code2, Gamepad2, Layers3, Pause, Play, RotateCcw} from "lucide-react";
+import {ArrowUpRight, Code2, Gamepad2, Layers3, Pause, Play, RotateCcw, SkipForward} from "lucide-react";
+import {BrandIntro} from './brand-intro';
 import "./orbital-gallery-hero.css";
 
 const stockImages = [
@@ -22,6 +23,7 @@ const features = [
 export type OrbitalGalleryHeroProps = {
     images?: readonly string[];
     duration?: number;
+    intro?: boolean;
     className?: string;
     authenticated?: boolean;
     paused?: boolean;
@@ -50,16 +52,36 @@ function OrbitalImage({src, index, count, rotation}: {src: string; index: number
     </div>;
 }
 
-export function HeroSection({images = defaultImages, duration = 35, className = '', authenticated = false, paused, reduced = false, onToggleMotion, onExplore}: OrbitalGalleryHeroProps) {
+export function HeroSection({images = defaultImages, duration = 35, intro = true, className = '', authenticated = false, paused, reduced = false, onToggleMotion, onExplore}: OrbitalGalleryHeroProps) {
     const section = React.useRef<HTMLElement>(null);
     const playback = React.useRef<Playback | null>(null);
     const rotation = useMotionValue(0);
     const inView = useInView(section, {amount: .05});
     const systemReduced = useReducedMotion();
     const [localPaused, setLocalPaused] = React.useState(false);
+    const [introState, setIntroState] = React.useState<'idle' | 'playing' | 'done'>('idle');
+    const [introCycle, setIntroCycle] = React.useState(0);
+    const introStarted = React.useRef(false);
     const isPaused = paused ?? localPaused;
     const reducedMotion = reduced || Boolean(systemReduced);
     const cycleDuration = Number.isFinite(duration) && duration > 0 ? duration : 35;
+    const opening = intro && introState === 'playing' && !isPaused && !reducedMotion;
+    const readOnlyMotion = paused !== undefined && !onToggleMotion;
+
+    React.useEffect(() => {
+        if (introStarted.current) return;
+        const frame = requestAnimationFrame(() => {
+            introStarted.current = true;
+            setIntroState(intro && !isPaused && !reducedMotion && !matchMedia('(prefers-reduced-motion: reduce)').matches ? 'playing' : 'done');
+        });
+        return () => cancelAnimationFrame(frame);
+    }, [intro, isPaused, reducedMotion]);
+
+    React.useEffect(() => {
+        if (introState !== 'playing') return;
+        const timer = setTimeout(() => setIntroState('done'), !intro || isPaused || reducedMotion ? 0 : 1850);
+        return () => clearTimeout(timer);
+    }, [introState, introCycle, intro, isPaused, reducedMotion]);
 
     React.useEffect(() => {
         const start = rotation.get();
@@ -71,20 +93,29 @@ export function HeroSection({images = defaultImages, duration = 35, className = 
 
     React.useEffect(() => {
         const sync = () => {
-            if (inView && !isPaused && !reducedMotion && !document.hidden && !matchMedia('(prefers-reduced-motion: reduce)').matches) playback.current?.play();
+            if (introState === 'done' && inView && !isPaused && !reducedMotion && !document.hidden && !matchMedia('(prefers-reduced-motion: reduce)').matches) playback.current?.play();
             else playback.current?.pause();
         };
         sync();
         document.addEventListener('visibilitychange', sync);
         return () => document.removeEventListener('visibilitychange', sync);
-    }, [inView, isPaused, reducedMotion, cycleDuration]);
+    }, [inView, isPaused, reducedMotion, cycleDuration, introState]);
 
     function toggleMotion() {
         if (onToggleMotion) onToggleMotion();
         else setLocalPaused(value => !value);
     }
 
-    return <section ref={section} className={'orbital-gallery-hero relative w-full overflow-hidden bg-white ' + className} aria-labelledby="studio-heading" data-orbit-duration={cycleDuration} data-motion-paused={isPaused || reducedMotion}>
+    function replayIntro() {
+        if (reducedMotion || readOnlyMotion) return;
+        if (playback.current) playback.current.time = 0;
+        if (!intro) return;
+        if (isPaused) toggleMotion();
+        setIntroCycle(value => value + 1);
+        setIntroState('playing');
+    }
+
+    return <section ref={section} className={'orbital-gallery-hero relative w-full overflow-hidden bg-white ' + className} aria-labelledby="studio-heading" data-orbit-duration={cycleDuration} data-motion-paused={isPaused || reducedMotion} data-brand-intro={opening}>
         <div className="ogh-stage absolute">
             <div className="ogh-artwork absolute inset-0 pointer-events-none" aria-hidden="true">
                 {images.map((src, index) => <OrbitalImage key={src + '-' + index} src={src} index={index} count={images.length} rotation={rotation}/>)}
@@ -108,10 +139,12 @@ export function HeroSection({images = defaultImages, duration = 35, className = 
             {features.map(({icon: Icon, title, description}) => <div className="ogh-feature text-center" key={title}><h2 className="flex items-center justify-center gap-2"><Icon size={14}/>{title}</h2><p>{description}</p></div>)}
         </div>
 
+        <BrandIntro key={introCycle}/>
+
         <div className="ogh-controls flex items-center justify-between">
-            <button type="button" onClick={() => {if (playback.current) playback.current.time = 0;}} disabled={reducedMotion} className="inline-flex items-center gap-2"><RotateCcw size={12}/><span>เริ่มวงโคจรใหม่</span></button>
+            {opening ? <button type="button" onClick={() => setIntroState('done')} className="inline-flex items-center gap-2"><SkipForward size={12}/><span>ข้ามเปิดตัว</span></button> : <button type="button" onClick={replayIntro} disabled={reducedMotion || readOnlyMotion} className="inline-flex items-center gap-2"><RotateCcw size={12}/><span>{intro ? 'เล่นเปิดตัวอีกครั้ง' : 'เริ่มวงโคจรใหม่'}</span></button>}
             <span className="ogh-credit">ภาพประกอบจาก Unsplash</span>
-            <button type="button" onClick={toggleMotion} aria-pressed={isPaused} aria-label={reducedMotion ? 'ปิดอนิเมชั่นตามการตั้งค่าอุปกรณ์' : isPaused ? 'เล่นอนิเมชั่น' : 'หยุดอนิเมชั่น'} disabled={reducedMotion || (paused !== undefined && !onToggleMotion)} className="inline-flex items-center gap-2">{isPaused || reducedMotion ? <Play size={12}/> : <Pause size={12}/>}<span>{reducedMotion ? 'REDUCED MOTION' : isPaused ? 'MOTION OFF' : cycleDuration + 's / ORBIT'}</span></button>
+            <button type="button" onClick={toggleMotion} aria-pressed={isPaused} aria-label={reducedMotion ? 'ปิดอนิเมชั่นตามการตั้งค่าอุปกรณ์' : isPaused ? 'เล่นอนิเมชั่น' : 'หยุดอนิเมชั่น'} disabled={reducedMotion || readOnlyMotion} className="inline-flex items-center gap-2">{isPaused || reducedMotion ? <Play size={12}/> : <Pause size={12}/>}<span>{reducedMotion ? 'REDUCED MOTION' : isPaused ? 'MOTION OFF' : cycleDuration + 's / ORBIT'}</span></button>
         </div>
     </section>;
 }

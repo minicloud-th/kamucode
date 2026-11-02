@@ -4,7 +4,7 @@ Asset: `public/media/hero-avatar-kc-v2.webp` (1024 × 1536, alpha preserved).
 
 Created with the built-in ImageGen tool using the supplied suited-avatar image as the body/pose reference and the new SVG KC symbol as the head reference. The PNG was converted to WebP at quality 90, with composition and alpha preserved.
 
-The mascot's KC symbol is retained as native SVG in `public/assets/brand/kc-monogram.svg`. The primary site emblem is the separate orbit-and-spark symbol in `mark.svg` and its runtime variants. The existing kamucode wordmark paths, lettering and site font remain unchanged. The rendered 3D mascot stays on Login and Signup without changing form height. The current landing uses an Unsplash orbital gallery; the mascot remains on account pages. No live 3D model or WebGL is required.
+The mascot's KC symbol is retained as native SVG in `public/assets/brand/kc-monogram.svg`. The primary site emblem is the layered Ribbon Star symbol in `mark.svg` and its runtime variants, sourced from `lib/brand-symbol.mjs`. The existing kamucode wordmark paths, lettering and site font remain unchanged. The rendered 3D mascot stays on Login and Signup without changing form height. The current landing uses an Unsplash orbital gallery; the mascot remains on account pages. No live 3D model or WebGL is required.
 
 ## Final generation prompt
 

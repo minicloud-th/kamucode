@@ -29,6 +29,7 @@ export default function Demo() {
 | --- | --- | --- |
 | `images` | Five local stock photos repeated twice | Decorative gallery sources; no product inventory claims |
 | `duration` | `35` | Seconds per full rotation; invalid/nonpositive values use 35 |
+| `intro` | `true` | Assemble the Ribbon Star logo before the first orbit; set false for a gallery-only embed |
 | `className` | Empty | Additional wrapper classes |
 | `authenticated` | `false` | Primary action links to `/login` or `/shop` |
 | `paused` | Uncontrolled | Parent-owned pause state; pass `onToggleMotion` with it |
@@ -38,7 +39,9 @@ export default function Demo() {
 
 The orbit angle is a Motion value, so animation frames do not re-render React. A shared angle and its negative keep the image rotation synchronized. CSS variables size the ellipse and cards without restarting the orbit on resize. The fixed 500px radii from the example are replaced so the ellipse can adapt to short screens and mobile. The feature row is hidden on mobile/short screens; the existing lower landing content retains the detailed introduction.
 
-Playback is paused when offscreen or in a hidden tab. Pausing/resuming preserves phase. Restart scrubs the current cycle to its beginning. Reduced motion leaves a static gallery and disables the animation controls. Photos are decorative, excluded from the accessibility tree and do not intercept pointer input; central content and controls remain keyboard accessible.
+The 1.85-second brand introduction assembles the two SVG ribbons and their highlights, reveals the unchanged wordmark and fades into the gallery. The orbit stays paused until the introduction finishes. Skip reveals the page immediately; Replay resets the cycle and repeats the introduction, resuming shared motion if the visitor had paused it. With `intro={false}`, the left control only restarts the orbit.
+
+Playback pauses when offscreen or in a hidden tab. Pausing/resuming the ordinary orbit preserves phase. Pausing during the introduction immediately reveals the page and ends the introduction; resuming then starts the orbit. Reduced motion skips the introduction, leaves a static gallery and disables animation controls. The overlay is decorative, has no pointer interception or focus trap, and the initial server-rendered page remains readable before JavaScript. Photos are decorative and excluded from the accessibility tree; central content and controls remain keyboard accessible.
 
 ## Image provenance
 

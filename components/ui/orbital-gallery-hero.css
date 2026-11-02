@@ -20,12 +20,39 @@
 .ogh-feature+ .ogh-feature {border-left:1px solid #e6e9ef}
 .orbital-gallery-hero .ogh-feature h2 {font-size:12px;line-height:1.5;font-weight:400;letter-spacing:-.025em;color:#3b465b}
 .ogh-feature p {font-size:10px;line-height:1.6;margin-top:5px;color:#7e8795}
-.ogh-controls {position:absolute;left:28px;right:28px;bottom:8px;gap:16px;z-index:30;color:#697587}
+.ogh-controls {position:absolute;left:28px;right:28px;bottom:8px;gap:16px;z-index:60;color:#697587}
 .ogh-controls button {min-height:36px;font-size:9px;line-height:1.4;padding:5px 0}
 .ogh-controls button:hover {color:#3159ec}
 .ogh-controls button:disabled {color:#a3acb9;cursor:default}
 .ogh-controls button:last-child span {font:8px ui-monospace,monospace;letter-spacing:.05em}
 .ogh-credit {position:absolute;left:50%;transform:translateX(-50%);font-size:8px;white-space:nowrap;color:#7c8795}
+.ogh-brand-intro {position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#fff;z-index:40;pointer-events:none;opacity:0;visibility:hidden}
+.ogh-intro-mark {width:124px;height:124px}
+.ogh-intro-mark>svg {width:100%;height:100%;overflow:visible}
+.ogh-intro-wordmark {width:180px;height:auto;margin-top:3px}
+.ogh-intro-tagline {font:7px/1.5 ui-monospace,monospace;letter-spacing:.21em;color:#7d8798}
+.ogh-intro-mark :is(.brand-symbol-back,.brand-symbol-front,.brand-symbol-glow) {transform-box:view-box;transform-origin:50% 50%}
+.orbital-gallery-hero[data-brand-intro=true] .ogh-brand-intro {visibility:visible;animation:ogh-intro-stage 1.65s ease both}
+.orbital-gallery-hero[data-brand-intro=true] .ogh-intro-mark {animation:ogh-logo-settle 1.15s cubic-bezier(.16,1,.3,1) both}
+.orbital-gallery-hero[data-brand-intro=true] .brand-symbol-back {animation:ogh-sail-back .8s cubic-bezier(.16,1,.3,1) .06s both}
+.orbital-gallery-hero[data-brand-intro=true] .brand-symbol-front {animation:ogh-sail-front .8s cubic-bezier(.16,1,.3,1) .18s both}
+.orbital-gallery-hero[data-brand-intro=true] .brand-symbol-glow {animation:ogh-glass-glow .9s ease .38s both}
+.orbital-gallery-hero[data-brand-intro=true] .brand-symbol-edge {stroke-dasharray:1;animation:ogh-edge-reveal .8s ease .3s both}
+.orbital-gallery-hero[data-brand-intro=true] .ogh-intro-wordmark {animation:ogh-wordmark-reveal .6s ease .38s both}
+.orbital-gallery-hero[data-brand-intro=true] .ogh-intro-tagline {animation:ogh-wordmark-reveal .6s ease .52s both}
+.orbital-gallery-hero[data-brand-intro=true] .ogh-artwork {animation:ogh-gallery-reveal .7s ease .95s both}
+.orbital-gallery-hero[data-brand-intro=true] .ogh-copy {animation:ogh-copy-reveal .65s ease 1.05s both}
+.orbital-gallery-hero[data-brand-intro=true] .ogh-features {animation:ogh-feature-reveal .6s ease 1.1s both}
+@keyframes ogh-intro-stage {0%,72% {opacity:1} 100% {opacity:0;visibility:hidden}}
+@keyframes ogh-logo-settle {from {opacity:0;transform:scale(.65) rotate(-12deg)} 65% {opacity:1;transform:scale(1.04) rotate(2deg)} to {opacity:1;transform:scale(1) rotate(0deg)}}
+@keyframes ogh-sail-back {from {opacity:0;transform:translateY(16px) rotate(-16deg) scale(.65)} to {opacity:1;transform:translateY(0) rotate(0deg) scale(1)}}
+@keyframes ogh-sail-front {from {opacity:0;transform:translateY(-16px) rotate(16deg) scale(.65)} to {opacity:1;transform:translateY(0) rotate(0deg) scale(1)}}
+@keyframes ogh-glass-glow {0% {opacity:0;transform:scale(.65)} 60% {opacity:1;transform:scale(1.06)} 100% {opacity:1;transform:scale(1)}}
+@keyframes ogh-edge-reveal {from {stroke-dashoffset:1;opacity:0} to {stroke-dashoffset:0;opacity:1}}
+@keyframes ogh-wordmark-reveal {from {opacity:0;transform:translateY(7px)} to {opacity:1;transform:translateY(0)}}
+@keyframes ogh-gallery-reveal {from {opacity:0;transform:scale(.96)} to {opacity:1;transform:scale(1)}}
+@keyframes ogh-copy-reveal {from {opacity:0;transform:translate(-50%,calc(-50% + 9px))} to {opacity:1;transform:translate(-50%,-50%)}}
+@keyframes ogh-feature-reveal {from {opacity:0} to {opacity:1}}
 @media (min-width:761px) and (max-height:760px) {
     .ogh-stage {inset:82px 24px 48px}
     .ogh-artwork {--ogh-card-width:clamp(104px,12cqw,150px)}
@@ -66,6 +93,8 @@
     .ogh-controls button {font-size:8px;gap:5px}
     .ogh-controls button:last-child span {font-size:7px}
     .ogh-credit {display:none}
+    .ogh-intro-mark {width:100px;height:100px}
+    .ogh-intro-wordmark {width:156px}
 }
 @media (max-width:360px) {
     .ogh-copy {width:190px}
@@ -75,4 +104,5 @@
 }
 @media (prefers-reduced-motion:reduce) {
     .orbital-gallery-hero *, .orbital-gallery-hero *:before, .orbital-gallery-hero *:after {transition:none!important;animation:none!important}
+    .orbital-gallery-hero .ogh-brand-intro {display:none!important}
 }
