@@ -7,6 +7,8 @@ The primary kamucode symbol combines two curved, translucent ribbons with a cyan
 - `lib/brand-symbol.mjs`: shared geometry, colors, gradients and SVG serialization.
 - `components/ui/brand-symbol.tsx`: React SVG renderer with unique gradient IDs.
 - `components/ui/brand-intro.tsx`: decorative mark, existing wordmark and tagline.
+- `components/ui/playground-hero.tsx`: current landing introduction, timer, skip/replay and pause behavior.
+- `components/store/landing.css`: current landing ribbon assembly and collage/copy reveal.
 - `components/ui/orbital-gallery-hero.tsx`: opening state, timer, skip/replay and shared orbit playback.
 - `components/ui/orbital-gallery-hero.css`: ribbon assembly, edge reveal and page fade animations.
 - `scripts/refresh-brand-assets.mjs`: rebuilds SVG variants, favicon and the light/dark identity board.
@@ -29,7 +31,11 @@ The script retains the existing gradient definitions and the complete original w
 
 PNG exports are rasterized from the native SVG with Sharp. The brand ZIP contains only public artwork and a README and uses fixed entry timestamps for reproducibility.
 
-## Opening behavior
+## Current landing opening
+
+The Playground hero renders the same canonical `BrandSymbol` and retained wordmark. Its first client frame starts a 1.85-second ribbon assembly; the catalog collage and headline fade in during the final part of that sequence, then remain still. Skip, pause or reduced motion reveal the complete composition. Replay restarts the CSS sequence and deliberately resumes motion if paused. Focusing a central hero link ends the intro so the focused control stays visible. Timers and the initialization frame are cleaned up on unmount; reduced motion is checked both by the parent media listener and directly before the intro starts.
+
+## Standalone orbital opening
 
 The first client frame starts a 1.85-second introduction when enabled and motion is allowed. The back and front ribbons assemble from opposite directions, reflective edges reveal, and the unchanged wordmark appears. The gallery and text fade in before the opening ends. The ordinary 35-second orbital animation starts after completion.
 

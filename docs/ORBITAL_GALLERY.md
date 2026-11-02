@@ -1,6 +1,6 @@
 # Orbital gallery hero
 
-The supplied React gallery is adapted for kamucode and used directly by `components/store/landing.tsx`.
+The supplied React gallery is adapted for kamucode and retained as a reusable standalone component with `demo.tsx`. The current landing uses `components/ui/playground-hero.tsx` instead; see `docs/LANDING_DESIGN.md`.
 
 ## Structure and installation
 
@@ -35,7 +35,7 @@ export default function Demo() {
 | `paused` | Uncontrolled | Parent-owned pause state; pass `onToggleMotion` with it |
 | `reduced` | `false` | Parent's reduced-motion state; device preference is also respected |
 | `onToggleMotion` | Local state when uncontrolled | Toggle the parent's shared motion state |
-| `onExplore` | Native `/collections` link | Landing uses it to scroll to the existing collection section |
+| `onExplore` | Native `/collections` link | Optional callback for a host page's collection section |
 
 The orbit angle is a Motion value, so animation frames do not re-render React. A shared angle and its negative keep the image rotation synchronized. CSS variables size the ellipse and cards without restarting the orbit on resize. The fixed 500px radii from the example are replaced so the ellipse can adapt to short screens and mobile. The feature row is hidden on mobile/short screens; the existing lower landing content retains the detailed introduction.
 

@@ -1,5 +1,13 @@
 # Release verification — TSX storefront
 
+## Current: full Playground landing redesign
+
+The entire landing composition now uses `components/store/landing.tsx`, scoped `landing.css` and the new `components/ui/playground-hero.tsx`. It preserves the canonical logo, unchanged fonts/lettering, compact Top bar and native full-stack routes. The page includes catalog collage, filterable selections, original film, selectable source previews, purchase steps, partner invitation, four native FAQ disclosures and the closing CTA. Default catalog artwork is mapped only for known IDs with matching default paths; arbitrary product IDs retain their valid supplied image instead of generating a nonexistent code asset.
+
+The release runs TypeScript, the production build and the existing disposable Worker/D1 integration suite. Only the two superseded headline checks in the existing landing smoke test change; auth, ownership, delivery, reservation and API assertions remain. Asset paths, internal section anchors, unique IDs and native account links are inspected separately. No production accounts, tickets, inventory or payment actions are created for QA.
+
+The 1.85-second CSS intro coordinates the existing ribbon symbol with copy/collage reveal. Skip and pause expose the final composition, replay resets the sequence, and focusing central links ends the opening. Reduced motion skips the opening through both CSS and the live media preference. These interaction and responsive-layout behaviors are code-reviewed, not browser-observed: the earlier browser automatic approval review denied page observation because the usage quota was exhausted. No alternate browser surface was used to bypass that denial. Earlier visual checks below describe superseded versions and do not verify this redesign.
+
 The requested experience runs from a React screen through a same-origin Worker API to a user-owned D1 record, then renders the persisted result. Administration is checked at the server boundary.
 
 | Boundary | Evidence |
