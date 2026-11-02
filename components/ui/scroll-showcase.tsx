@@ -13,7 +13,7 @@ export function ScrollShowcase({paused, reduced}: {paused: boolean; reduced: boo
 
     return <section ref={sequence} className="kc-showcase-sequence" id="hero-film" aria-labelledby="kc-film-title" data-scene-ready="false" data-scene-motion="false" data-scene-disabled={still}>
         <div className="kc-showcase-stage">
-            <div className="kc-showcase-heading"><p className="kc-section-caption">สิ่งที่ชอบ พาเราไปต่อได้</p><h2 id="kc-film-title">จากโลกที่คุณเล่น<br/>สู่สิ่งที่คุณสร้าง.</h2><p>เริ่มจากความสนใจ แล้วค้นพบความเป็นไปได้ถัดไปของคุณ</p></div>
+            <div className="kc-showcase-heading"><p className="kc-section-caption">สิ่งที่ชอบ พาเราไปต่อได้</p><h2 id="kc-film-title">จากโลกที่คุณเล่น<br/>สู่สิ่งที่คุณสร้าง.</h2></div>
             <div className="kc-showcase-frame" data-classic-dark>
                 <HeroVideo paused={still}/>
                 <div className="kc-showcase-shade"/>

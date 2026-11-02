@@ -427,7 +427,7 @@
 .kc-showcase-overlay>a:hover {text-decoration:underline;text-underline-offset:5px}
 .kc-showcase-sequence[data-scene-ready=true]:not([data-scene-disabled=true]) {height:160svh}
 .kc-showcase-sequence[data-scene-ready=true]:not([data-scene-disabled=true]) .kc-showcase-stage {position:sticky;top:0;height:100svh;min-height:580px;padding:0}
-.kc-showcase-sequence[data-scene-ready=true]:not([data-scene-disabled=true]) .kc-showcase-heading {position:absolute;top:105px;left:50%;margin:0;transform:translate3d(-50%,calc(var(--scene-progress)*-50px),0);opacity:clamp(0,calc(1 - var(--scene-progress)*1.6),1);pointer-events:none}
+.kc-showcase-sequence[data-scene-ready=true]:not([data-scene-disabled=true]) .kc-showcase-heading {position:absolute;top:105px;left:50%;margin:0;transform:translate3d(-50%,calc(var(--scene-progress)*-50px),0);opacity:clamp(0,calc(1 - var(--scene-progress)*4),1);pointer-events:none}
 .kc-showcase-sequence[data-scene-ready=true]:not([data-scene-disabled=true]) .kc-showcase-frame {position:absolute;left:50%;top:100px;bottom:50px;margin:0;aspect-ratio:auto;transform-origin:center top;transform:translate3d(-50%,calc(220px*(1 - var(--scene-progress))),0) scale(calc(.78 + var(--scene-progress)*.22));border-radius:calc(36px - var(--scene-progress)*14px)}
 .kc-showcase-sequence[data-scene-ready=true]:not([data-scene-disabled=true]) .kc-showcase-overlay {opacity:clamp(0,calc((var(--scene-progress) - .15)*2),1)}
 .kc-showcase-frame:focus-within .kc-showcase-overlay {opacity:1!important}
