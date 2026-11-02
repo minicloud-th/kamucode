@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from 'react';
 import Link from '@/components/store/navigation-link';
 import {ArrowDown, ArrowRight, ArrowUpRight, Check, Code2, Gamepad2, PackageCheck, Plus, Users} from 'lucide-react';
 import {PlaygroundHero} from '@/components/ui/playground-hero';
-import {HeroVideo} from './media';
+import {ScrollShowcase} from '@/components/ui/scroll-showcase';
 import {useStore} from './provider';
 import {money, type Product} from '@/lib/commerce/types';
 
@@ -60,7 +60,9 @@ export function Landing() {
     }
 
     return <div className="kc-landing" data-motion-paused={still}>
-        <PlaygroundHero tiles={featured.map(product => ({src: coverFor(product), label: product.name, kind: product.kind}))} authenticated={me.authenticated} paused={paused} reduced={reduced} onToggleMotion={() => setPaused(value => !value)} onExplore={explore}/>
+        <PlaygroundHero tiles={ordered.slice(0, 8).map(product => ({src: coverFor(product), label: product.name, kind: product.kind}))} authenticated={me.authenticated} paused={paused} reduced={reduced} onToggleMotion={() => setPaused(value => !value)} onExplore={explore}/>
+
+        <ScrollShowcase paused={paused} reduced={reduced}/>
 
         <nav className="kc-paths kc-container" aria-label="เลือกพื้นที่ของคุณ">
             <Link href="/games"><Gamepad2 size={23}/><span><strong>หาเกมที่อยากเล่น</strong><small>สำรวจคอลเลกชันไอดีเกม</small></span><ArrowUpRight size={18}/></Link>
@@ -80,8 +82,6 @@ export function Landing() {
             {displayed.length === 0 && <div className="kc-empty"><PackageCheck size={32}/><h3>ยังไม่มีคอลเลกชันในหมวดนี้</h3><p>ลองเลือกหมวดอื่น หรือกลับมาดูรายการใหม่ได้ภายหลัง</p><button type="button" onClick={() => setFilter('all')}>ดูทั้งหมด</button></div>}
             <div className="kc-collection-bottom"><p>ภาพประกอบคอลเลกชัน อ่านรายละเอียดและเงื่อนไขของสินค้าก่อนสั่งซื้อ</p><Link className="kc-text-link" href="/shop">เปิดร้านค้า <ArrowRight size={17}/></Link></div>
         </section>
-
-        <section className="kc-film" id="hero-film" data-classic-dark aria-labelledby="kc-film-title"><div className="kc-film-inner kc-container"><div className="kc-film-visual"><HeroVideo paused={still}/><span className="kc-film-caption">ภาพและวิดีโอของ kamucode</span></div><div className="kc-film-copy"><img src="/assets/brand/mark-dark.svg" width="52" height="52" alt="" loading="lazy"/><h2 id="kc-film-title">ความสนใจเดียว<br/>ไปได้หลายทาง.</h2><p>วันนี้อาจเป็นเกมที่คุณหลงใหล<br/>พรุ่งนี้อาจเป็นโปรเจกต์ที่คุณลงมือสร้าง<br/>เราอยากเป็นพื้นที่เล็ก ๆ ที่พาคุณไปต่อ</p><Link className="kc-text-link" href="/showcase">ดูภาพและวิดีโอ <ArrowUpRight size={17}/></Link></div></div></section>
 
         {source && <section className="kc-source kc-section kc-container" aria-labelledby="kc-source-title"><div className="kc-source-copy"><p className="kc-section-caption">สำหรับคนชอบสร้าง</p><h2 id="kc-source-title">ไม่ต้องเริ่ม<br/>จากหน้าว่าง.</h2><p>ดูแนวทางซอร์สโค้ดที่คุณสนใจ<br/>เลือกพื้นฐาน แล้วพัฒนาให้เป็นงานของคุณ</p><ul><li><Check size={17}/>ดูเทคโนโลยีและขอบเขตของแต่ละชุด</li><li><Check size={17}/>อ่านรายละเอียดไฟล์และสิทธิ์ใช้งาน</li><li><Check size={17}/>ติดตามข้อมูลส่งมอบในบัญชีของคุณ</li></ul><Link className="kc-text-link" href="/source-code">สำรวจซอร์สโค้ด <ArrowRight size={17}/></Link></div><div className="kc-source-demo"><div className="kc-source-choices" role="group" aria-label="เลือกตัวอย่างซอร์สโค้ด">{sources.map(product => <button type="button" key={product.id} aria-pressed={source.id === product.id} onClick={() => setSourceId(product.id)}>{product.name}</button>)}</div><div className="kc-preview-browser" role="region" aria-label={'ภาพตัวอย่าง ' + source.name}><div className="kc-preview-toolbar" aria-hidden="true"><span/><span/><span/><p>{source.name}</p><Code2 size={14}/></div><div className="kc-preview-art"><img src={coverFor(source)} alt={'ภาพประกอบ ' + source.name} width="1000" height="750" loading="lazy" decoding="async"/></div></div><div className="kc-preview-info"><div aria-live="polite"><h3>{source.name}</h3><p>{source.tag} / {source.demo ? 'ภาพตัวอย่างคอลเลกชัน' : 'อ่านรายละเอียดสินค้า'}</p></div><Link href={'/product/' + source.id} className="kc-round-link" aria-label={'ดูรายละเอียด ' + source.name}><ArrowUpRight size={20}/></Link></div></div></section>}
 

@@ -1,6 +1,14 @@
 # Release verification — TSX storefront
 
-## Current: full Playground landing redesign
+## Current: Fastwork-inspired native-scroll presentation
+
+Live browser review of Fastwork informed the two coordinated scenes described in `MOTION_PRESENTATION.md`. Managed-preview checks observed actual intro states, outward card transforms, sticky hero position, copy blur/fade, video-frame expansion, native media Play/Pause, collection filtering, source-preview switching and FAQ disclosure at 1363×936. Replay returns to the start; manual pause settles the word reel so it cannot freeze between clipped phrases. A passive RAF helper refreshes both scenes on scroll, including entry into a large overlapping region that may not cross an IO threshold.
+
+The shared managed preview URL was later replaced by a different Site, so cold Login and temporary mobile-fixture requests from that point are excluded. Published Login on the unchanged baseline opened normally; the final built-Worker suite and post-deployment native check cover the actual app. No unrelated Site or auth/security workaround was introduced. Mobile viewport and reduced-motion preference emulation remain unverified; their CSS and lifecycle paths are reviewed. The temporary fixture is removed. The previous quota limitation below is historical; desktop browser observation is available for this pass.
+
+Final source validation runs TypeScript, the production build and the existing 131-assertion disposable Worker/D1 suite. No production accounts, support tickets, inventory or payment actions are created for QA.
+
+## Previous version 21: full Playground landing redesign
 
 The entire landing composition now uses `components/store/landing.tsx`, scoped `landing.css` and the new `components/ui/playground-hero.tsx`. It preserves the canonical logo, unchanged fonts/lettering, compact Top bar and native full-stack routes. The page includes catalog collage, filterable selections, original film, selectable source previews, purchase steps, partner invitation, four native FAQ disclosures and the closing CTA. Default catalog artwork is mapped only for known IDs with matching default paths; arbitrary product IDs retain their valid supplied image instead of generating a nonexistent code asset.
 

@@ -33,7 +33,7 @@ PNG exports are rasterized from the native SVG with Sharp. The brand ZIP contain
 
 ## Current landing opening
 
-The Playground hero renders the same canonical `BrandSymbol` and retained wordmark. Its first client frame starts a 1.85-second ribbon assembly; the catalog collage and headline fade in during the final part of that sequence, then remain still. Skip, pause or reduced motion reveal the complete composition. Replay restarts the CSS sequence and deliberately resumes motion if paused. Focusing a central hero link ends the intro so the focused control stays visible. Timers and the initialization frame are cleaned up on unmount; reduced motion is checked both by the parent media listener and directly before the intro starts.
+The Playground hero renders the same canonical `BrandSymbol` and retained wordmark. Its first client frame starts a 1.85-second ribbon assembly; the catalog collage and headline fade in during the final part of that sequence, then enter the current drift and native-scroll presentation. Skip, pause or reduced motion reveal the complete composition. Replay restarts the CSS sequence and deliberately resumes motion if paused. Focusing a central hero link ends the intro so the focused control stays visible; interactive hero focus returns to its start when an overlapping scene has obscured it. Timers and the initialization frame are cleaned up on unmount; reduced motion is checked both by the parent media listener and directly before the intro starts.
 
 ## Standalone orbital opening
 
