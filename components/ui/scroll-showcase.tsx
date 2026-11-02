@@ -1,24 +1,16 @@
 'use client';
 
-import {useRef} from 'react';
 import {ArrowUpRight} from 'lucide-react';
 import Link from '@/components/store/navigation-link';
 import {HeroVideo} from '@/components/store/media';
-import {useScrollPresentation} from '@/hooks/use-scroll-presentation';
 
 export function ScrollShowcase({paused, reduced}: {paused: boolean; reduced: boolean}) {
-    const sequence = useRef<HTMLElement>(null);
-    const still = paused || reduced;
-    useScrollPresentation(sequence, !still);
-
-    return <section ref={sequence} className="kc-showcase-sequence" id="hero-film" aria-labelledby="kc-film-title" data-scene-ready="false" data-scene-motion="false" data-scene-disabled={still}>
-        <div className="kc-showcase-stage">
-            <div className="kc-showcase-heading"><p className="kc-section-caption">สิ่งที่ชอบ พาเราไปต่อได้</p><h2 id="kc-film-title">จากโลกที่คุณเล่น<br/>สู่สิ่งที่คุณสร้าง.</h2></div>
-            <div className="kc-showcase-frame" data-classic-dark>
-                <HeroVideo paused={still}/>
-                <div className="kc-showcase-shade"/>
-                <div className="kc-showcase-overlay"><img src="/assets/brand/mark-dark.svg" alt="" width="42" height="42" loading="lazy"/><h3>ความสนใจเดียว<br/>ไปได้หลายทาง.</h3><p>เกมที่คุณชอบ และโปรเจกต์ที่คุณอยากลงมือทำ</p><Link href="/showcase">ดูภาพและวิดีโอ <ArrowUpRight size={16}/></Link></div>
-            </div>
+    return <section className="kc-film kc-container" id="hero-film" aria-labelledby="kc-film-title">
+        <div className="kc-section-heading kc-film-heading"><h2 id="kc-film-title">สิ่งที่ชอบ<br/>พาเราไปต่อได้.</h2><p>จากโลกที่คุณเล่น สู่สิ่งที่คุณสร้าง<br/>นี่คือพื้นที่สำหรับความเป็นไปได้ใหม่ ๆ</p></div>
+        <div className="kc-film-frame" data-classic-dark>
+            <HeroVideo paused={paused || reduced}/>
+            <div className="kc-film-shade"/>
+            <div className="kc-film-copy"><img src="/assets/brand/mark-dark.svg" alt="" width="48" height="48"/><h3>จุดเริ่มต้นเล็ก ๆ<br/>ไปได้อีกไกล.</h3><Link href="/showcase" className="kc-button kc-button-light">ดูภาพและวิดีโอ <ArrowUpRight size={18}/></Link></div>
         </div>
     </section>;
 }

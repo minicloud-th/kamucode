@@ -1,6 +1,18 @@
 # Release verification — TSX storefront
 
-## Current: Fastwork-inspired native-scroll presentation
+## Current: Artcraft × Fastwork catalog workspace
+
+The new landing keeps the original font stack, Ribbon Star/vector lettering, compact Top bar and full-stack storefront. Its large left-aligned heading leads into a framed catalog canvas instead of the previous surrounding-card/sticky composition. Ordinary page flow avoids overlapping scroll stages and blurred copy. `LANDING_ARTCRAFT.md` records the direction and reference review.
+
+Managed-browser checks at 1363×936 confirm no horizontal overflow (client/scroll width 1348/1348px), a 682px headline with no text overflow, and loaded local artwork. The hero's source selector changes the actual image, title, product link and category destination to Storefront Kit. Replay exposes the brand overlay and `kc-canvas-open`; Skip restores the settled scene. Pause changes actual card playback to `paused` and keeps the primary image at opacity 1. Resume restores motion.
+
+Temporary frames mount the actual header/landing components at 390×844 and 320×631. Their client/scroll widths are 375/375px and 305/305px; headline widths also match without overflow. Motion controls have 44px targets and appear in the first viewport. Native pointer Pause/Resume at scrollY 94 preserves that position. On mobile, source filtering returns two cards, Dashboard UI updates its image/title/product link, and the example-product FAQ expands with its real answer.
+
+Controlled reduced-motion props on the actual hero/showcase skip the introduction, disable replay/motion controls, pause card drift and leave the primary image fully opaque. The video source remains unset while still. Native OS preference emulation and physical-device checks are outside this evidence.
+
+The real preview's original MP4 reaches readyState 4, advances currentTime after a native Play click and returns to paused after Pause. The retained Top bar Login opens `/login` and its email-continue control becomes enabled. No credentials or production QA records are submitted. After restoring the source checkout, its empty local-only D1 was initialized with the three existing migrations; production schema and configuration are unchanged. Temporary QA entries are removed before the release build. Release checks use TypeScript, the production build and the existing 131-assertion disposable Worker/D1 suite.
+
+## Previous version 24: Fastwork-inspired native-scroll presentation
 
 Live browser review of Fastwork informed the two coordinated scenes described in `MOTION_PRESENTATION.md`. Managed-preview checks observed actual intro states, outward card transforms, sticky hero position, copy blur/fade, video-frame expansion, native media Play/Pause, collection filtering, source-preview switching and FAQ disclosure at 1363×936. Replay returns to the start; manual pause settles the word reel so it cannot freeze between clipped phrases. A passive RAF helper refreshes both scenes on scroll, including entry into a large overlapping region that may not cross an IO threshold.
 

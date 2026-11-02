@@ -1,4 +1,6 @@
-# Motion presentation
+# Previous version 24 motion presentation
+
+The current landing is documented in `LANDING_ARTCRAFT.md`. The sticky/blur composition and measurements below describe version 24, not the current ordinary-flow catalog canvas.
 
 ## Reference and direction
 
