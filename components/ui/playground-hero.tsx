@@ -51,7 +51,7 @@ export function PlaygroundHero({tiles, authenticated, paused, reduced, onToggleM
     return <div ref={sequence} className="kc-hero-sequence" data-scene-ready="false" data-scene-motion="false" data-scene-disabled={still}><section className="kc-hero" aria-labelledby="kc-hero-title" data-intro={opening} onFocusCapture={event => {
         const target = event.target as HTMLElement;
         if (opening && target.closest('.kc-hero-copy')) setPhase('ready');
-        if (target.closest('a,button') && (sequence.current?.getBoundingClientRect().top ?? 0) < -1) sequence.current?.scrollIntoView({behavior: 'instant', block: 'start'});
+        if (target.closest('a,button') && getComputedStyle(event.currentTarget).position === 'sticky' && (sequence.current?.getBoundingClientRect().top ?? 0) < -1) sequence.current?.scrollIntoView({behavior: 'instant', block: 'start'});
     }}>
         <div className="kc-hero-scene">
             <div className="kc-hero-tiles" aria-hidden="true">{tiles.map((tile, index) => <div key={tile.label + '-' + index} className={'kc-hero-tile kc-tile-' + index + ' kc-tile-' + tile.kind} style={{'--tile-index': index} as CSSProperties}><div className="kc-tile-shift"><div className="kc-tile-enter"><div className="kc-tile-drift"><div className="kc-tile-art"><img src={tile.src} alt="" width="640" height="480" draggable={false} decoding="async" fetchPriority={index === 0 ? 'high' : 'auto'}/></div><div className="kc-tile-label"><img src="/assets/brand/mark.svg" alt="" width="23" height="23"/><span><strong>{tile.label}</strong><small>{tile.kind === 'game' ? 'คอลเลกชันไอดีเกม' : 'คอลเลกชันซอร์สโค้ด'}</small></span></div></div></div></div></div>)}</div>
