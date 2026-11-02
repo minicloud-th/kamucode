@@ -65,10 +65,20 @@ Replay activates the actual emblem and perspective-entry animations. Pausing dur
 
 The film tile starts scrolling toward the existing video section. Its final playback/pause check could not finish: browser automatic approval review denied page observation because the usage quota was exhausted. No successful playback result is claimed for this revision. The final code change replaces an image wrapper with a block-level span to keep the film button's markup valid; it does not change the measured dimensions. Temporary responsive QA pages are removed before the release build. TypeScript, the production build and the disposable Worker/D1 integration suite validate the final source before publication.
 
-## Height-scaled reference composition
+## Previous release: height-scaled reference composition
 
 This revision rebuilds the hero layout around the supplied reference positions. The stage uses the full hero height, images scale primarily with that height, and the four upper images have an explicit header-clearance floor. Flat image rotations replace the earlier perspective treatment. A compact three-line headline and single supporting sentence keep the center open. Mobile retains ten images with its own positions and width-based sizes.
 
 The emblem appears first and images enter from the outer edges with staggered timing, rather than spreading from the center. Pointer movement, floating and scroll travel are smaller. The copy's scroll opacity has a 0.4 floor. Existing skip/replay/pause controls, reduced-motion handling, account links and the film-section action remain.
 
 This final layout has not been rechecked in the browser. The previous browser observation was denied by automatic approval review because the usage quota was exhausted; no alternate browser surface or automation was used to bypass that denial. Prior viewport measurements above describe earlier releases, not this layout. Release checks use TypeScript, the production build and the disposable Worker/D1 integration suite. Video playback remains outside this revision's verified results.
+
+## Motion orbital gallery integration
+
+The supplied React component is integrated at `components/ui/orbital-gallery-hero.tsx`, with a standalone `demo.tsx` and scoped CSS. Existing shadcn aliases, Tailwind v4 and TypeScript are reused. Motion 14.9.0 is installed and locked; no additional context provider is needed. The earlier custom immersive hero and its layout CSS import are removed.
+
+A shared motion value drives a 35-second clockwise orbit. Each image's position follows the responsive ellipse, while paired positive/negative rotations preserve its orientation. The component supports controlled pause from Landing, standalone local pause, cycle restart, reduced-motion preferences, offscreen pause and tab-visibility pause. Static content links to Login/shop and collections. The former generic AI-generator claims are replaced with existing kamucode functions.
+
+All five local Unsplash WebP files were decoded with Sharp and verified as 640×420 images; their combined source size is 193,092 bytes. The same five files are reused for ten orbit positions. No external image host or additional CSP allowance is required. TypeScript passed after component integration. Final release validation uses the production build and disposable Worker/D1 suite.
+
+Browser animation, responsive layout and playback controls have not been reverified for this revision. Earlier browser automatic approval review denied page observation because of the usage quota; no alternate browser automation was used to bypass that denial. Previous browser screenshots and viewport measurements are not evidence for this new Motion component.

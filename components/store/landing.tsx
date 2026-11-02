@@ -4,7 +4,7 @@ import {useEffect, useRef, useState, type CSSProperties} from 'react';
 import Link from '@/components/store/navigation-link';
 import {ArrowUpRight, ChevronRight, Code2, Gamepad2, Plus} from 'lucide-react';
 import {HeroVideo, BrandReveal} from './media';
-import {ImmersiveHero} from './immersive-hero';
+import GalleryHero from '@/components/ui/orbital-gallery-hero';
 import {useStore} from './provider';
 import type {Product} from '@/lib/commerce/types';
 
@@ -52,7 +52,7 @@ export function Landing() {
     function scrollTo(id: string) {document.getElementById(id)?.scrollIntoView({behavior: still ? 'instant' : 'smooth'});}
 
     return <div className="studio-landing" ref={root} data-motion-paused={still}>
-        <ImmersiveHero products={products} authenticated={me.authenticated} paused={paused} reduced={reduced} onToggleMotion={() => setPaused(v => !v)} onExplore={() => scrollTo('collections')} onFilm={() => scrollTo('hero-film')}/>
+        <GalleryHero authenticated={me.authenticated} paused={paused} reduced={reduced} onToggleMotion={() => setPaused(v => !v)} onExplore={() => scrollTo('collections')}/>
 
         <div className="studio-ticker" aria-hidden="true"><div className="studio-ticker-track">{[0, 1].map(n => <div key={n}>{['PLAY YOUR WAY', 'BUILD SOMETHING YOURS', 'GROW TOGETHER'].map(word => <span key={word}>{word}<img src="/assets/brand/mark.svg" width="30" height="30" alt=""/></span>)}</div>)}</div></div>
 
